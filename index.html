@@ -1,0 +1,1353 @@
+<!doctype html>
+<html lang="th" data-mode="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sportday 2026 กำหนดการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#ff7a1a; --purple:#6b2fb3; --gold:#ffb627;
+  --bg:#fff6ea; --bg2:#ffe7c7; --ink:#2a1640; --muted:#7a6390; --card:#ffffffcc; --line:#2a164022;
+  --sky1:#7fd3ff; --sky2:#ffe3a8;
+}
+html[data-mode="night"]{
+  --orange:#ff8a2a; --purple:#a066ff; --gold:#ffc861;
+  --bg:#0f0820; --bg2:#1c0f38; --ink:#f3eaff; --muted:#b9a6d6; --card:#1d1238cc; --line:#f3eaff22;
+  --sky1:#05020d; --sky2:#3a1670;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body,main{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:"Sarabun",system-ui,sans-serif;transition:background .6s,color .6s}
+h1,h2,h3,.k{font-family:"Mitr",sans-serif}
+svg{display:block}
+[data-show]{display:none}
+html[data-mode="day"] [data-show="day"],html[data-mode="night"] [data-show="night"]{display:block}
+
+/* ---------- view transition ---------- */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-new(root){animation:reveal .9s cubic-bezier(.75,0,.2,1)}
+@keyframes reveal{from{clip-path:circle(0 at var(--vx,90%) var(--vy,30px))}to{clip-path:circle(160vmax at var(--vx,90%) var(--vy,30px))}}
+
+/* ---------- top bar ---------- */
+.top{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;pointer-events:none}
+.brand{pointer-events:auto;font:500 15px/1 "Mitr";letter-spacing:.04em;padding:10px 14px;border-radius:99px;background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line)}
+.brand b{color:var(--orange)}
+.toggle{pointer-events:auto;position:relative;display:flex;padding:4px;border-radius:99px;background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line)}
+.toggle button{position:relative;z-index:1;display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--ink);font:500 14px "Mitr";padding:8px 14px;border-radius:99px;cursor:pointer;transition:color .4s}
+.toggle button svg{width:18px;height:18px}
+.toggle .pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:99px;background:linear-gradient(135deg,var(--orange),var(--gold));transition:transform .5s cubic-bezier(.7,0,.2,1),background .5s}
+html[data-mode="night"] .toggle .pill{transform:translateX(100%);background:linear-gradient(135deg,var(--purple),#5a2fb0)}
+html[data-mode="day"] .toggle [data-to="day"],html[data-mode="night"] .toggle [data-to="night"]{color:#fff}
+.bar{position:fixed;left:0;top:0;height:4px;z-index:60;width:calc(var(--sp,0)*100%);background:linear-gradient(90deg,var(--orange),var(--purple))}
+
+/* ---------- generic sticky scene ---------- */
+.scene{position:relative}
+.stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+
+/* ---------- hero ---------- */
+.hero{height:190vh}
+.hero .stick{display:grid;place-items:center;text-align:center}
+.sky{position:absolute;inset:0;background:linear-gradient(180deg,var(--sky1),var(--sky2))}
+.sunset{position:absolute;inset:0;background:linear-gradient(180deg,#ff7a59 0%,#ffb36b 60%,#ffd59e 100%);opacity:calc(var(--p,0)*.9)}
+.sun{position:absolute;left:50%;top:calc(14% + var(--p,0)*58%);width:min(34vw,240px);aspect-ratio:1;translate:-50% 0;border-radius:50%;background:radial-gradient(circle,#fff6b0,#ffc533 60%,#ff9a1a);box-shadow:0 0 80px 30px #ffcf4d88}
+.sun::before{content:"";position:absolute;inset:-35%;border-radius:50%;background:repeating-conic-gradient(#ffd25a55 0 8deg,transparent 8deg 22deg);animation:spin 40s linear infinite;z-index:-1;mask:radial-gradient(circle,#000 45%,transparent 70%)}
+@keyframes spin{to{rotate:360deg}}
+.cloud{position:absolute;height:38px;border-radius:40px;background:#fff;opacity:.9;filter:blur(.3px);animation:drift linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:50px;height:50px;left:18px;top:-24px}.cloud::after{width:36px;height:36px;left:56px;top:-16px}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+.hills{position:absolute;left:-5%;right:-5%;bottom:0;height:30%;translate:0 calc(var(--p,0)*-8vh)}
+.hills svg{width:100%;height:100%}
+.hero-title{position:relative;z-index:3;padding:0 16px;translate:0 calc(var(--p,0)*-28vh);opacity:calc(1 - var(--p,0)*1.6)}
+.eyebrow{display:inline-block;font:500 14px "Mitr";letter-spacing:.2em;padding:6px 14px;border-radius:99px;background:var(--card);border:1px solid var(--line);margin-bottom:14px}
+.hero h1{font-weight:600;font-size:clamp(52px,13vw,150px);line-height:.92;letter-spacing:-.02em}
+.hero h1 span{display:inline-block;padding-top:.3em;margin-top:-.3em;animation:pop .9s cubic-bezier(.2,1.6,.4,1) both;animation-delay:calc(var(--i)*60ms)}
+@keyframes pop{from{transform:translateY(60px) scale(.4) rotate(-12deg);opacity:0}}
+html[data-mode="day"] .hero h1{color:#fff;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:6px 6px 0 var(--orange)}
+html[data-mode="night"] .hero h1 span{background:linear-gradient(180deg,#ffd27a,#ff7a1a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px #ff7a1a88)}
+.hero h1.night-h{font-size:clamp(46px,11vw,130px)}
+.h1-sub{font:500 clamp(24px,5vw,48px) "Mitr";color:#fff;letter-spacing:.04em;margin-top:4px;text-shadow:0 0 20px #a066ff}
+.hero .date{margin-top:16px;font:500 clamp(18px,3.4vw,28px) "Mitr"}
+.cd{display:flex;gap:10px;justify-content:center;margin-top:22px}
+.cd div{min-width:68px;padding:10px 8px;border-radius:16px;background:var(--card);backdrop-filter:blur(8px);border:1px solid var(--line)}
+.cd b{display:block;font:500 30px/1 "Mitr";font-variant-numeric:tabular-nums}
+.cd small{font-size:12px;color:var(--muted)}
+.cd .state{font:500 22px "Mitr";padding:12px 22px;color:#fff;background:var(--orange);border:0}
+.scrollcue{position:absolute;bottom:24px;left:50%;translate:-50% 0;z-index:3;width:28px;height:46px;border:2px solid var(--ink);border-radius:20px;opacity:calc(1 - var(--p,0)*4)}
+.scrollcue::after{content:"";position:absolute;left:50%;top:8px;width:6px;height:10px;margin-left:-3px;border-radius:3px;background:var(--ink);animation:cue 1.6s infinite}
+@keyframes cue{to{transform:translateY(16px);opacity:0}}
+.floaty{position:absolute;z-index:2;animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-18px) rotate(4deg)}}
+.rise{translate:0 calc((1 - var(--p,0))*30vh)}
+
+/* night hero */
+.stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2;transform:scale(.6)}}
+.moon{position:absolute;right:12%;top:12%;width:min(38vw,260px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe2a6,#ffab3d 55%,#e2741c);box-shadow:0 0 90px 30px #ff8a2a66;scale:calc(1 + var(--p,0)*1.4);translate:calc(var(--p,0)*-20vw) calc(var(--p,0)*12vh)}
+.moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 62% 38%,#c7651b38 0 9%,#0000 10%),radial-gradient(circle at 36% 64%,#c7651b30 0 7%,#0000 8%),radial-gradient(circle at 70% 70%,#c7651b28 0 5%,#0000 6%)}
+.castle{position:absolute;left:0;right:0;bottom:0;height:42%;translate:0 calc(var(--p,0)*-6vh)}
+.castle svg{width:100%;height:100%}
+.fog{position:absolute;left:-10%;right:-10%;bottom:-20px;height:30%;background:radial-gradient(ellipse at 30% 100%,#b28cff55,transparent 60%),radial-gradient(ellipse at 75% 100%,#ff8a2a33,transparent 60%);filter:blur(10px);animation:fog 9s ease-in-out infinite alternate}
+@keyframes fog{to{transform:translateX(6%)}}
+.bat{position:fixed;z-index:40;width:60px;pointer-events:none;color:#0b0616;animation:fly 9s linear forwards}
+html[data-mode="night"] .bat{color:#1a0d33;filter:drop-shadow(0 0 6px #ff8a2a)}
+.bat svg{animation:flap .25s ease-in-out infinite alternate}
+@keyframes flap{to{transform:scaleY(.4)}}
+@keyframes fly{from{transform:translate(-80px,var(--y0))}to{transform:translate(110vw,var(--y1))}}
+.glow{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),#ff8a2a1f,transparent 70%)}
+html[data-mode="day"] .glow{display:none}
+
+/* ---------- VS ---------- */
+.vs{height:220vh}
+.vs .stick{display:flex}
+.side{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;align-items:center;gap:6px;color:#fff;text-align:center;padding:max(76px,11vh) 12px 0}
+.side h2{font-weight:600;font-size:clamp(26px,5.6vw,72px);line-height:1.15;padding-top:.15em}
+.side .sub{font:500 clamp(14px,2.4vw,20px) "Mitr";opacity:.9}
+.side.o{background:radial-gradient(circle at 30% 30%,#ffa04d,#ff6a00);translate:calc((1 - min(var(--p,0)*2.2,1))*-100%) 0}
+.side.p{background:radial-gradient(circle at 70% 30%,#8f4ee0,#4b1a8f);translate:calc((1 - min(var(--p,0)*2.2,1))*100%) 0}
+.crew{position:relative;width:100%;flex:1;display:flex;justify-content:center;align-items:flex-end;margin-top:auto}
+.crew::before{content:"";position:absolute;left:50%;bottom:0;translate:-50% 0;width:min(70%,60vh);aspect-ratio:1;border-radius:50%;background:radial-gradient(#ffffff70,#fff0 68%)}
+.m{position:relative;width:min(40%,42vh);margin:0 -9%;--d:0;translate:0 calc((1 - clamp(0,calc((var(--p,0) - .2 - var(--d))*4),1))*110%)}
+.m img{display:block;width:100%;filter:drop-shadow(0 12px 22px #0006)}
+.m.boss{width:min(54%,58vh);z-index:2}
+.m.l,.m.r{--d:.08;filter:brightness(.94)}
+.m b{position:absolute;left:50%;bottom:7%;translate:-50% 0;white-space:nowrap;font:600 clamp(12px,1.5vw,16px) "Mitr";padding:3px 12px;border-radius:99px;background:#fff;color:#1a0d2e;box-shadow:0 6px 16px #0004}
+.m.l b{left:34%}.m.r b{left:66%}
+.m.boss b{bottom:9%;font-size:clamp(14px,1.9vw,20px);padding:4px 16px 5px;background:#1a0d2e;color:#fff}
+.m.boss b small{display:block;font:600 .62em "Mitr";letter-spacing:.06em;color:var(--tc)}
+.side.o{--tc:#ffa04d}.side.p{--tc:#c79bff}
+.vsbadge{position:absolute;left:50%;top:34%;translate:-50% -50%;width:min(28vw,170px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--ink);font:600 clamp(40px,8vw,72px) "Mitr";box-shadow:0 0 0 10px #ffffff55,0 20px 60px #0005;scale:clamp(0,calc((var(--p,0) - .45)*5),1);rotate:calc((1 - clamp(0,calc((var(--p,0) - .45)*5),1))*-180deg)}
+.dress{position:absolute;left:50%;top:14px;z-index:3;translate:-50% 0;white-space:nowrap;text-align:center;font:600 18px "Mitr";padding:10px 22px;border-radius:22px;background:#1a0d2e;color:#fff;opacity:clamp(0,calc((var(--p,0) - .6)*5),1)}
+@media (max-width:700px){
+  .vs .stick{flex-direction:column}
+  .side{padding-top:14px}
+  .side.o{padding-top:132px}
+  .dress{top:62px}
+  .side h2{font-size:clamp(24px,7vw,34px)}
+  .crew::before{width:min(80%,34vh)}
+  .m{width:min(40%,24vh)}.m.boss{width:min(54%,32vh)}
+  .vsbadge{top:63%;left:auto;right:-14px;width:68px;font-size:30px}
+}
+.dress small{display:block;font:500 14px "Mitr";color:#f3eaffcc;margin-top:2px}
+.dress i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 10px;vertical-align:middle}
+
+/* ---------- sections ---------- */
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.sec{padding:90px 0 40px;position:relative;z-index:2}
+.sec-h{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:14px;row-gap:6px;margin-bottom:34px}
+.sec-h h2{font-weight:600;font-size:clamp(34px,6vw,60px);line-height:1}
+.sec-h span{font:500 16px "Mitr";color:var(--muted)}
+
+/* timeline */
+.tl{position:relative;list-style:none;padding-left:78px}
+.tl::before,.tl .fill{content:"";position:absolute;left:58px;top:6px;width:4px;border-radius:4px}
+.tl::before{bottom:6px;background:var(--line)}
+.tl .fill{height:calc(var(--p,0)*(100% - 12px));background:linear-gradient(var(--orange),var(--purple))}
+.tl .runner{position:absolute;left:44px;top:calc(var(--p,0)*(100% - 40px));width:32px;transition:top .1s linear}
+.tl-item{position:relative;margin-bottom:22px;opacity:0;transform:translateX(60px) rotate(2deg);transition:all .8s cubic-bezier(.2,.9,.3,1.2)}
+.tl-item.in{opacity:1;transform:none}
+.tl-time{position:absolute;left:-78px;top:14px;width:50px;text-align:right;font:500 17px/1 "Mitr"}
+.tl-time small{display:block;font:400 12px "Sarabun";color:var(--muted);margin-top:4px}
+.tl-dot{position:absolute;left:-26px;top:16px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--line);transition:all .4s}
+.tl-item.lit .tl-dot{border-color:var(--orange);background:var(--orange);box-shadow:0 0 0 6px #ff7a1a33}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;backdrop-filter:blur(8px);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-3px) rotate(-.4deg);box-shadow:0 14px 30px #2a164018}
+.card h3{font-weight:500;font-size:19px;line-height:1.3}
+.card p{margin-top:6px;color:var(--muted);line-height:1.6;font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font:500 12px "Mitr";padding:4px 10px;border-radius:99px;background:var(--bg2);color:var(--ink)}
+.tags:empty{display:none}
+.tag.o{background:var(--orange);color:#fff}.tag.p{background:var(--purple);color:#fff}
+.st{display:none;margin-left:8px;vertical-align:middle;font:500 11px "Mitr";padding:3px 9px;border-radius:99px}
+.tl-item.live .card{border:2px solid var(--orange);box-shadow:0 0 0 6px #ff7a1a22}
+.tl-item.live .st{display:inline-block;background:var(--orange);color:#fff;animation:pulse 1.2s infinite}
+.tl-item.past{opacity:.45}
+.tl-item.past .st{display:inline-block;background:var(--line)}
+@keyframes pulse{50%{opacity:.5}}
+
+/* games horizontal */
+.games{padding:90px 0 40px;z-index:2}
+.games-h{padding:0 16px;max-width:860px;width:100%;margin:0 auto 24px}
+.track{position:relative;display:flex;gap:20px;padding:20px max(16px,calc(50% - 200px));overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.track::-webkit-scrollbar{display:none}
+.game{scroll-snap-align:center}
+.dots i{cursor:pointer}
+.game{width:min(78vw,400px);flex:none;border-radius:28px;padding:26px;color:#fff;position:relative;overflow:hidden;box-shadow:0 20px 50px #2a164030;rotate:calc(var(--r)*1deg)}
+.game:nth-child(odd){background:linear-gradient(150deg,#ff9a3d,#ff5e00)}
+.game:nth-child(even){background:linear-gradient(150deg,#8d4ee0,#45168a)}
+.game .num{font:600 110px/0.8 "Mitr";opacity:.22;position:absolute;right:14px;top:16px}
+.game .ic{width:86px;height:86px;margin-bottom:18px}
+.game h3{font-weight:500;font-size:30px;margin:10px 0 8px;line-height:1.1}
+.game p{line-height:1.6;opacity:.95;font-size:15px}
+.game .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.game .meta span{font:500 12px "Mitr";padding:5px 10px;border-radius:99px;background:#fff3}
+.game{cursor:pointer}
+.roster-btn{margin-top:16px;width:100%;padding:12px;border:0;border-radius:16px;cursor:pointer;background:#fff;font:600 16px "Mitr";color:var(--ink);box-shadow:0 6px 0 #0002}
+.game:nth-child(odd) .roster-btn{color:#c44d00}.game:nth-child(even) .roster-btn{color:#4b1a8f}
+.roster-pop{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:16px;background:#05020dcc}
+.roster-pop.open{display:grid;animation:fadein .25s}
+.roster-wrap{position:relative;width:min(100%,560px)}
+.roster-x{position:absolute;right:-8px;top:-18px;z-index:2;width:62px;height:62px;border-radius:50%;border:4px solid #fff;cursor:pointer;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 35% 30%,#ff7a85,#e8203a 60%,#b80f27);box-shadow:0 6px 0 #8a0a1c,0 14px 26px #0006;animation:xpop .5s .15s cubic-bezier(.2,1.8,.4,1) both;transition:translate .15s,box-shadow .15s}
+.roster-x svg{width:30px;height:30px}
+.roster-x:hover{rotate:90deg;transition:rotate .3s}
+.roster-x:active{translate:0 4px;box-shadow:0 2px 0 #8a0a1c,0 8px 16px #0006}
+@keyframes xpop{from{scale:0;rotate:-180deg}}
+.roster-card{width:100%;max-height:86vh;overflow:auto;overscroll-behavior:contain;padding:20px;border-radius:26px;background:#fff6ea;color:#2a1640;animation:zoomin .35s cubic-bezier(.2,1.4,.4,1)}
+.roster-card>b{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;font:600 28px/1.2 "Mitr";margin-bottom:14px}
+.roster-card>b small{font:500 15px "Mitr";color:#7a6390}
+.rs-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rs{border-radius:18px;padding:12px;color:#fff}
+.rs.o{background:linear-gradient(160deg,#ff9a3d,#ff5e00)}.rs.p{background:linear-gradient(160deg,#8d4ee0,#45168a)}
+.rs h4{font:600 15px/1.25 "Mitr";margin-bottom:8px}
+.rs ol{list-style:none;display:flex;flex-direction:column;gap:5px}
+.rs li{padding:6px 10px;border-radius:12px;background:#fff2;font:600 16px/1.2 "Mitr"}
+.rs li small{display:block;font:500 12px "Mitr";opacity:.85}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:26px}
+.dots i{width:10px;height:10px;border-radius:99px;background:var(--line);transition:all .3s}
+.dots i.on{width:30px;background:var(--orange)}
+
+/* prizes */
+.prizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.prize{border-radius:24px;padding:22px;background:var(--card);border:1px solid var(--line);opacity:0;transform:translateY(40px) scale(.95);transition:all .7s cubic-bezier(.2,.9,.3,1.3)}
+.prize.in{opacity:1;transform:none}
+.prize .lbl{font:500 15px "Mitr";color:var(--muted)}
+.prize .amt{font:600 clamp(38px,7vw,54px)/1.1 "Mitr";color:var(--orange);font-variant-numeric:tabular-nums}
+.prize .amt small{font-size:18px;color:var(--ink);margin-left:6px}
+.prize .x{font:500 14px "Mitr"}
+.win{grid-column:1/-1;text-align:center;padding:28px 16px 30px;background:linear-gradient(135deg,#ff7a1a26,#8d4ee026);border:2px solid var(--line)}
+.win-vs{display:flex;align-items:center;justify-content:center;gap:clamp(10px,4vw,40px)}
+.wv{display:flex;flex-direction:column;align-items:center;gap:8px;animation:lead 2.4s ease-in-out infinite}
+.wv.p{animation-delay:-1.2s}
+.wv svg{width:clamp(90px,24vw,150px);height:clamp(82px,22vw,136px)}
+.wv span{font:600 18px "Mitr";padding:4px 16px;border-radius:99px;color:#fff}
+.wv.o span{background:var(--orange)}.wv.p span{background:var(--purple)}
+@keyframes lead{0%,100%{scale:.82;opacity:.65}50%{scale:1.12;opacity:1;translate:0 -10px}}
+.wq{font:600 clamp(60px,15vw,110px)/1 "Mitr";color:var(--gold);text-shadow:0 0 30px #ffc86188;animation:wq 1.2s ease-in-out infinite alternate}
+@keyframes wq{from{rotate:-12deg}to{rotate:12deg;scale:1.15}}
+.win .lbl{font:600 clamp(24px,5vw,34px) "Mitr";color:var(--ink);margin-top:16px}
+.win .amt{font-size:clamp(84px,24vw,190px);line-height:1;margin-top:4px;text-shadow:0 10px 40px #ff7a1a55}
+.win .amt small{font-size:clamp(24px,5vw,40px)}
+
+/* day: hotel map */
+.wrap.wider{max-width:1180px}
+.hotel-ui{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.lm{display:flex;flex-direction:column;gap:8px;position:sticky;top:80px}
+.lm button{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:10px;text-align:left;cursor:pointer;padding:11px 14px;border-radius:18px;border:2px solid var(--line);background:var(--card);color:var(--ink);transition:border-color .2s,background .2s,translate .2s}
+.lm button:hover{translate:4px 0}
+.lm i{grid-row:span 2;width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.lm b{font:600 16px/1.25 "Mitr"}
+.lm small{grid-column:2;font:500 13px "Mitr";color:var(--muted)}
+.lm button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.lm button.on small{color:#fff9}
+.hotel-main{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hotel-view{position:relative;border-radius:26px;overflow:hidden;background:#fbf1df;box-shadow:0 20px 50px #2a164030,inset 0 0 0 3px #2a164014}
+.hotel-map{display:block;width:100%;aspect-ratio:3/2;touch-action:pan-y}
+.hotel-map text{font-family:"Mitr",sans-serif}
+.hotel-map .room{opacity:0;scale:.4;transform-box:fill-box;transform-origin:center;transition:opacity .4s,scale .5s cubic-bezier(.2,1.6,.4,1);transition-delay:calc(var(--i)*22ms)}
+.hotel-map.in .room{opacity:1;scale:1}
+.hotel-map .pick>*{transition:fill .35s,opacity .35s}
+.hotel-view.focus .hotel-map .pick:not(.lit):not(.hit)>rect{fill:#ddd6e4}
+.hotel-view.focus .hotel-map .pick:not(.lit):not(.hit) text{fill:#a59cb2}
+.hotel-view.focus .hotel-map .pick:not(.lit):not(.hit) .venue-ring{opacity:0}
+@media (max-width:760px){
+  .hotel-ui{grid-template-columns:1fr;gap:12px}
+  .lm{position:static;flex-direction:row;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+  .lm::-webkit-scrollbar{display:none}
+  .lm button{flex:none;padding:8px 13px;border-radius:99px}
+  .lm button:hover{translate:none}
+  .lm small{display:none}
+  .lm i{grid-row:auto;width:11px;height:11px}
+  .lm b{font-size:15px;white-space:nowrap}
+  .hotel-map{aspect-ratio:1}
+}
+.found:empty{display:none}
+.rp{padding:16px 18px;border-radius:22px;background:var(--card);border:2px solid var(--ink);animation:fcin .45s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes fcin{from{opacity:0;transform:translateY(20px) scale(.94)}}
+.rp-h{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.rp-h b{font:600 30px/1 "Mitr";font-variant-numeric:tabular-nums}.rp-h span{font:500 14px "Mitr";color:var(--muted)}
+.rp ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.rp li{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:var(--bg2);font:600 16px/1.2 "Mitr"}
+.rp li small{display:block;font:500 12px "Mitr";color:var(--muted)}
+.rp li i{flex:none;width:12px;height:12px;border-radius:50%;background:#b9aec6}
+.rp li.o i{background:var(--orange)}.rp li.p i{background:var(--purple)}
+.rp-none{font:500 15px "Mitr";color:var(--muted)}
+.zoom-btn{position:absolute;right:12px;top:12px;z-index:2;width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;display:none;place-items:center;background:var(--ink);color:#fff;box-shadow:0 8px 20px #2a164055}
+.zoom-btn svg{width:24px;height:24px}
+.zoom-btn.show{display:grid}
+.zoom-btn .zi,.zoom-btn.out .zo{display:none}.zoom-btn.out .zi{display:block}
+.hotel-map .room{cursor:pointer}
+.tp-grid [data-room]{cursor:pointer}
+.hotel-map .room.hit>rect{fill:#ffd23f;stroke:#2a1640;stroke-width:4;animation:hit .6s ease-in-out infinite alternate}
+.hotel-map .room.hit text{fill:#2a1640}
+@keyframes hit{to{fill:#ff8a2a}}
+.hotel-map .venue-ring{transform-box:fill-box;transform-origin:center;animation:ring2 1.8s ease-out infinite}
+@keyframes ring2{from{scale:1;opacity:1}to{scale:1.18;opacity:0}}
+.hotel-map .tower{cursor:pointer}
+.hotel-view[data-view="resort"] .tower-plan,.hotel-view[data-view="tower"] .hotel-map{display:none}
+.tower-plan{overflow-x:auto;padding:16px;animation:fadein .35s;scrollbar-width:thin}
+.tp-in{min-width:780px}
+.tp-sea{display:grid;place-items:center;padding:10px;border-radius:16px;margin-bottom:8px;background:linear-gradient(90deg,#5cc3ea,#9fe0f5,#5cc3ea);font:600 20px "Mitr";color:#fff;text-shadow:0 2px 0 #2a8fc066}
+.tp-grid{display:grid;gap:4px;grid-template-columns:58px repeat(4,1fr) 6px repeat(11,1fr);grid-auto-rows:50px}
+.tp-grid>div{display:grid;place-items:center;border-radius:10px;font:600 16px "Mitr";color:#fff;background:#ff7a1a;box-shadow:inset 0 -4px 0 #0002;transition:background .35s,color .35s}
+.tp-grid .fl{position:sticky;left:0;z-index:2;background:#fbf1df;box-shadow:none;color:#2a1640;font-size:15px}
+.tp-grid .gap{background:none;box-shadow:none}
+.tp-grid .hall,.tp-grid .lobby{background:#efe4ff;color:#6b2fb3;box-shadow:none;font-size:15px;text-align:center;line-height:1.2}
+.tp-grid .lobby{font-size:20px}
+.hotel-view.focus .tp-grid [data-room]:not(.hit){background:#e6e0ec;color:#aaa1b6;box-shadow:none}
+.tp-grid .hit{position:relative;z-index:1;background:#ffd23f;color:#2a1640;outline:3px solid #2a1640;animation:tphit .6s ease-in-out infinite alternate}
+@keyframes tphit{to{background:#ff8a2a;color:#fff;scale:1.1}}
+.newbies{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.nb{margin:0;border-radius:20px;overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 24px #2a164018;opacity:0;transform:translateY(30px) scale(.9);transition:all .6s cubic-bezier(.2,1.4,.4,1);transition-delay:calc(var(--i)*35ms)}
+.newbies.in .nb{opacity:1;transform:none}
+.nb img{display:block;width:100%;aspect-ratio:1;object-fit:cover;cursor:zoom-in;transition:scale .3s}
+.nb:hover img{scale:1.05}
+.nb figcaption{position:relative;padding:8px 10px 10px;text-align:center;background:var(--card)}
+.nb b{display:block;font:600 17px/1.2 "Mitr"}
+.nb span{font:500 13px "Mitr";color:var(--muted)}
+@media (max-width:600px){.newbies{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.nb{border-radius:14px}.nb figcaption{padding:5px 4px 7px}.nb b{font-size:14px}.nb span{font-size:11px}}
+.hotel-map .wave{animation:wave 3s ease-in-out infinite alternate}
+@keyframes wave{to{translate:-40px 6px}}
+
+/* night: route */
+.route{position:relative;z-index:2;padding:40px 0}
+.road{position:absolute;inset:40px 0;width:100%;height:calc(100% - 80px);overflow:visible}
+.road path{fill:none;stroke-linecap:round}
+.road .base{stroke:#ffffff12;stroke-width:44}
+.road .dash{stroke:#ffc86166;stroke-width:3;stroke-dasharray:2 14}
+.road .done{stroke:var(--orange);stroke-width:6;filter:drop-shadow(0 0 6px #ff8a2a)}
+.stop{position:relative;z-index:1;height:90vh;display:flex;align-items:center;padding:0 16px}
+.stop:nth-of-type(even){justify-content:flex-end}
+.box{width:min(58%,460px);padding:20px;border-radius:26px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);opacity:0;transform:translateY(50px) scale(.9);transition:all .7s cubic-bezier(.2,.9,.3,1.3)}
+.stop.here .box{opacity:1;transform:none}
+.box h3{font-weight:500;font-size:clamp(24px,4vw,36px);margin-top:14px}
+.box.reg{background:linear-gradient(150deg,#ff9a3d,#ff5e00);border:0;color:#fff;box-shadow:0 20px 60px #ff6a0055}
+.big-t{font:600 clamp(64px,14vw,150px)/.95 "Mitr";letter-spacing:-.03em}
+.big-l{font:500 clamp(30px,6vw,60px)/1.2 "Mitr"}
+.box.reg .tag{background:#fff3;color:#fff}.box.reg .tag.o{background:#2a1640}
+.shot{position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#7c3fe0,#2a1050);color:#ffc861}
+.shot .ph{width:30%;height:30%}
+.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eyebrow2{display:inline-block;font:500 12px "Mitr";letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.yant-row{display:flex;align-items:center;gap:12px;margin-top:14px;font:500 clamp(16px,2.6vw,20px)/1.35 "Mitr"}
+.yant{width:34px;flex:none;transform-origin:50% 0;animation:sway2 2.4s ease-in-out infinite}
+@keyframes sway2{50%{rotate:8deg}}
+.stop .box-wide{width:min(90%,680px)}
+.wide{display:block;width:100%;height:auto;cursor:zoom-in;filter:drop-shadow(0 14px 24px #0009);transition:transform .4s}
+.wide:hover{transform:scale(1.03)}
+.shot.art{background:radial-gradient(circle at 50% 60%,#ff9a3d,#c44d00 75%)}
+.shot.art.band{background:radial-gradient(circle at 50% 60%,#8f4ee0,#2a1050 75%)}
+.shot.art svg{width:80%;height:80%}
+.steam path{animation:steam 2.4s ease-in-out infinite}.steam path:nth-child(2){animation-delay:-.8s}.steam path:nth-child(3){animation-delay:-1.6s}
+@keyframes steam{0%{opacity:0;translate:0 10px}50%{opacity:1}100%{opacity:0;translate:0 -10px}}
+.pestle{animation:pound .6s ease-in-out infinite alternate;transform-box:fill-box}
+@keyframes pound{to{translate:-4px 10px}}
+.note{animation:hop 1s ease-in-out infinite alternate}.note.n2{animation-delay:-.5s}
+@keyframes hop{to{translate:0 -10px;rotate:-8deg}}
+.fan{position:relative;aspect-ratio:1/.98;max-height:56vh;margin:6px auto 0}
+.fan img{position:absolute;left:36%;bottom:0;height:94%;aspect-ratio:1/3;object-fit:cover;border-radius:10px;border:3px solid #fff;box-shadow:0 12px 30px #0008;transform-origin:50% 120%;cursor:zoom-in;transition:transform .8s cubic-bezier(.2,1.4,.4,1),z-index 0s;transition-delay:calc((var(--k) + 2)*70ms)}
+.in .fan img{transform:translateX(calc(var(--k)*28%)) rotate(calc(var(--k)*9deg))}
+.in .fan img:hover{z-index:5;transition-delay:0s;transform:translateX(calc(var(--k)*28%)) rotate(calc(var(--k)*9deg)) translateY(-14%) scale(1.12)}
+.lightbox{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:#05020dee;cursor:zoom-out;padding:16px}
+.lightbox.open{display:grid;animation:fadein .3s}
+.lightbox img{max-height:92vh;max-width:100%;border-radius:12px;animation:zoomin .4s cubic-bezier(.2,1.4,.4,1)}
+@keyframes fadein{from{opacity:0}}@keyframes zoomin{from{transform:scale(.6) rotate(-6deg)}}
+.mascot{position:absolute;z-index:3;left:50%;top:40px;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;overflow:hidden;border:4px solid var(--gold);background:#2a1050;box-shadow:0 0 0 8px #ffc86122,0 0 40px #ff8a2a88;will-change:left,top}
+.mascot img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;transform:scale(1.35);transform-origin:50% 30%;transition:transform .3s}
+.mascot.flip img{transform:scale(1.35) scaleX(-1)}
+.mascot.walk{animation:waddle .3s ease-in-out infinite alternate}
+@keyframes waddle{from{rotate:-9deg;translate:0 -6px}to{rotate:9deg;translate:0 4px}}
+@media (max-width:600px){.box{width:68%}.mascot{width:84px;height:84px;margin:-42px 0 0 -42px}}
+
+/* night: hall map */
+.hall .stick{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 12px 16px}
+.hall-map{width:100%;max-width:640px;flex:1;min-height:0}
+.hall-map text{font-family:"Mitr",sans-serif}
+.mg{transition:opacity .5s}
+.hall-map.focus .mg:not(.on){opacity:.18}
+.beam{transform-box:fill-box;transform-origin:50% 0;animation:sweep 3s ease-in-out infinite alternate}
+@keyframes sweep{from{rotate:-14deg}to{rotate:14deg}}
+.dancer{animation:hop2 .5s ease-in-out infinite alternate}
+@keyframes hop2{to{translate:0 -6px}}
+.hall-title{font:600 clamp(22px,4.6vw,32px) "Mitr";margin-bottom:8px}
+.callout{position:absolute;left:0;top:0;max-width:min(300px,calc(100% - 16px));padding:10px 16px 12px;border-radius:18px;background:#fff;color:#1a0d2e;box-shadow:0 14px 34px #000a;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.callout.show{opacity:1;visibility:visible}
+.callout::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:18px;height:18px;margin:-10px 0 0 -9px;background:#fff;rotate:45deg;border-radius:0 0 4px 0}
+.callout.down::after{top:0;margin-top:-8px;border-radius:4px 0 0 0}
+.callout small{display:block;font:500 12px "Mitr";color:var(--purple);font-variant-numeric:tabular-nums}
+.callout b{display:block;font:600 clamp(19px,4.4vw,25px)/1.25 "Mitr"}
+.callout span{display:block;font:500 15px/1.35 "Mitr";color:#5b4a78;white-space:pre-line}
+.callout span:empty{display:none}
+.callout.pop{transform-origin:var(--ax,50%) 100%;animation:cap .45s cubic-bezier(.2,1.6,.4,1),bob 1s .45s ease-in-out infinite alternate}
+.callout.down.pop{transform-origin:var(--ax,50%) 0}
+@keyframes cap{from{transform:scale(.6);opacity:0}}
+@keyframes bob{to{translate:0 -6px}}
+
+.tbl{cursor:pointer}
+.tbl circle{transition:fill .2s}
+.tbl:hover circle{fill:#ffc861}
+.tbl-pop{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:16px;background:#05020dcc}
+.tbl-pop.open{display:grid;animation:fadein .25s}
+.tbl-card{width:min(100%,380px);max-height:80vh;overflow:auto;padding:22px;border-radius:24px;background:linear-gradient(160deg,#3a1670,#1d1238);border:1px solid #ffc86144;animation:zoomin .35s cubic-bezier(.2,1.4,.4,1)}
+.tbl-card b{display:block;font:600 30px "Mitr";color:var(--gold)}
+.tbl-card b small{font:400 15px "Mitr";color:var(--muted);margin-left:10px}
+.tbl-card ol{list-style:none;counter-reset:s;margin-top:12px;display:flex;flex-direction:column;font:400 17px/1.4 "Mitr"}
+.tbl-card li{counter-increment:s;display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px dashed #ffffff1f}
+.tbl-card li:last-child{border:0}
+.tbl-card li::before{content:counter(s);width:22px;flex:none;color:var(--gold);font-size:14px;font-variant-numeric:tabular-nums}
+.tbl-card li span{margin-left:auto;font-size:14px;color:var(--muted)}
+.tbl-card ol:empty{display:none}
+
+/* night: free time */
+.ft-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ft-card{position:relative;display:flex;flex-direction:column;padding:16px 16px 20px;border-radius:26px;background:var(--card);border:1px solid var(--line);opacity:0;transform:translateY(50px) scale(.94);transition:all .7s cubic-bezier(.2,.9,.3,1.3)}
+.ft-card:nth-child(3){transition-delay:.1s}.ft-card:nth-child(4){transition-delay:.2s}
+.ft-card.in{opacity:1;transform:none}
+.ft-card h3{font-weight:600;font-size:clamp(22px,3vw,28px);margin-top:14px}
+.ft-wide{grid-column:1/-1}
+.ft-menu{padding:24px 28px;background:linear-gradient(160deg,#3a1670,#1d1238);border-color:#ffc86144}
+.ft-menu h3{margin:0 0 6px;font-size:clamp(26px,4vw,36px);color:var(--gold)}
+.ft-txt{font:400 15px/1.5 "Sarabun";color:var(--muted);margin-top:8px}
+.ft-txt b{font-family:"Mitr";font-weight:500;color:var(--gold)}
+.ft-badge{position:absolute;top:12px;left:12px;z-index:1;font:600 13px "Mitr";padding:4px 12px;border-radius:99px;background:#fff;color:#c44d00}
+.ft-card .shot,.ft-card .fan{width:100%;aspect-ratio:4/3;max-height:none;margin:0;border-radius:18px}
+.ft-card .fan{overflow:hidden;background:radial-gradient(circle at 50% 70%,#5a2a9a,#1d1238 75%)}
+.ft-card .fan img{height:82%;bottom:4%;left:41%}
+.ft-backdrop{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:center;gap:20px}
+.ft-backdrop .wide{border-radius:14px}
+.menu{list-style:none;counter-reset:m;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:32px}
+.menu li:nth-child(4n){border:0}
+.menu li{counter-increment:m;display:flex;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px dashed #ffc86133;font:500 clamp(16px,2.6vw,19px)/1.35 "Mitr"}
+.menu li::before{content:counter(m);flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--orange);color:#1a0d2e;font:600 14px "Mitr"}
+@media (max-width:760px){.ft-grid{grid-template-columns:1fr}.ft-menu{padding:20px}.menu{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}.menu li:nth-child(4){border-bottom:1px dashed #ffc86133}.ft-backdrop{grid-template-columns:1fr;gap:0}}
+
+/* night: blackout */
+.blackout{height:300vh}
+.blackout .stick{background:#000}
+.bo-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,#3a1670,#0f0820 70%);opacity:calc(1 - clamp(0,calc(var(--p,0)*5),1))}
+.clock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .5s,scale .5s}
+.blackout[data-stage="0"] .clock{opacity:0;scale:.7}
+.face{position:relative;width:min(62vw,340px);aspect-ratio:1;border-radius:50%;border:6px solid #ffc861;background:radial-gradient(circle,#1d1238,#07030f 75%);box-shadow:0 0 60px #ff8a2a55,inset 0 0 40px #000}
+.face::before{content:"";position:absolute;inset:10px;border-radius:50%;background:repeating-conic-gradient(from -1deg,#ffc861 0 2deg,transparent 2deg 30deg);mask:radial-gradient(circle,transparent 82%,#000 83%)}
+.face i{position:absolute;left:50%;bottom:50%;border-radius:6px;transform-origin:50% 100%;transition:rotate .55s cubic-bezier(.3,1.9,.5,1)}
+.face .hh{width:10px;height:26%;margin-left:-5px;background:#fff;rotate:calc(180deg + var(--m,56)*.5deg)}
+.face .mh{width:6px;height:40%;margin-left:-3px;background:var(--orange);rotate:calc(var(--m,56)*6deg);box-shadow:0 0 12px var(--orange)}
+.face b{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;background:#ffc861}
+.digi{font:600 clamp(56px,13vw,120px)/1 "Mitr";color:#fff;font-variant-numeric:tabular-nums;letter-spacing:.04em;padding:6px 26px;border-radius:20px;background:#ffffff0d;border:1px solid #ffffff22}
+.blackout[data-stage="5"] .digi{color:var(--orange);text-shadow:0 0 30px var(--orange);animation:shake .12s 6}
+.blackout[data-stage="5"] .face{border-color:var(--orange);box-shadow:0 0 120px #ff8a2acc}
+@keyframes shake{25%{translate:-6px 0}75%{translate:6px 0}}
+.bo-reveal{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;background:radial-gradient(circle at 50% 50%,#fff4d6 0,#ffb85c 18%,#7a2fd0 45%,#160a2c 75%);clip-path:circle(calc(clamp(0,calc((var(--p,0) - .66)*3.2),1)*90vmax) at 50% 50%)}
+.bo-reveal .k{font-weight:600;font-size:clamp(70px,20vw,200px);line-height:.9;color:#fff;text-shadow:0 0 40px #ff8a2a}
+.bo-reveal .t{font:500 22px "Mitr";color:#fff;margin-top:16px}
+.bo-reveal{--rv:clamp(0,calc((var(--p,0) - .7)*3.4),1)}
+.deco{position:absolute;inset:0}
+.deco i{position:absolute;left:50%;top:50%;width:var(--w);translate:calc(-50% + var(--x)*var(--rv)*1vw) calc(-50% + var(--y)*var(--rv)*1vh);scale:calc(.2 + var(--rv)*.8);color:#1a0d33;filter:drop-shadow(0 0 8px #ff8a2a)}
+.deco svg{display:block;width:100%;animation:dbob 2.4s var(--d) ease-in-out infinite alternate}
+@keyframes dbob{from{transform:translateY(-10px) rotate(-10deg)}to{transform:translateY(10px) rotate(10deg)}}
+.beams{position:absolute;inset:0;background:conic-gradient(from 180deg at 50% -10%,transparent 0 160deg,#fff3 165deg,transparent 170deg 190deg,#fff3 195deg,transparent 200deg);animation:sway 4s ease-in-out infinite alternate;mix-blend-mode:screen}
+@keyframes sway{to{transform:rotate(6deg)}}
+
+/* night: red carpet */
+.carpet{height:320vh}
+.carpet .stick{--sy:max(150px,26vh);overflow:hidden;background:radial-gradient(ellipse at 50% 0,#3a1670,#0f0820 70%)}
+.c-head{position:absolute;top:84px;left:0;right:0;text-align:center;z-index:3;padding:0 16px}
+.c-head .t{font:600 clamp(30px,6vw,56px)/1.05 "Mitr"}
+.spots i{position:absolute;top:-6vh;left:var(--x);width:46vmax;height:125vh;translate:-50% 0;transform-origin:50% 0;rotate:var(--r0);background:linear-gradient(#ff9a3af0,#ff7a1a66 60%,#ff7a1a00);clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);mix-blend-mode:screen;filter:blur(5px);animation:spot 3.2s ease-in-out infinite alternate}
+.spots i:nth-child(1){--x:6%;--r0:-28deg;--r1:-6deg}
+.spots i:nth-child(2){--x:94%;--r0:28deg;--r1:6deg;animation-delay:-1.6s}
+.spots i:nth-child(3){--x:50%;--r0:-8deg;--r1:8deg;animation-duration:2.4s;opacity:.7}
+@keyframes spot{to{rotate:var(--r1)}}
+.stage{position:absolute;left:50%;top:var(--sy);translate:-50% 0;width:min(96vw,760px);height:9vh;border-radius:14px 14px 4px 4px;background:linear-gradient(#5a2a9a,#2a1050);border-top:4px solid var(--gold);box-shadow:0 0 70px #ff8a2a55}
+.runway{position:absolute;left:50%;top:calc(var(--sy) + 9vh);bottom:0;width:min(92vw,720px);translate:-50% 0;filter:drop-shadow(0 0 30px #c4122a99)}
+.runway .rug{position:absolute;inset:0;clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);background:linear-gradient(90deg,#ffc861 0 1.2%,#0000 1.2% 98.8%,#ffc861 98.8%),repeating-linear-gradient(0deg,#c4122a 0 46px,#b10f25 46px 92px)}
+.stage{display:flex;justify-content:center;align-items:center;gap:min(1.4vw,10px)}
+.slot{--on:clamp(.18,calc((var(--p,0)*10.5 - var(--i) - .95)*20),1);position:relative;width:min(7.4vw,52px);opacity:var(--on);scale:calc(.8 + var(--on)*.2);filter:drop-shadow(0 0 calc(var(--on)*10px) #ff8a2a)}
+.slot svg,.walker svg{display:block;width:100%}
+.slot b,.walker b{position:absolute;left:50%;top:78%;translate:-50% -50%;display:grid;place-items:center;border-radius:50%;background:var(--orange);color:#1a0d2e;font-family:"Mitr";font-weight:600}
+.slot b{width:62%;aspect-ratio:1;font-size:clamp(10px,2.6vw,16px)}
+/* one ghost at a time walks from the stage down the middle of the carpet toward the viewer */
+.walker{--t:clamp(0,calc(var(--p,0)*10.5 - var(--i)),1);position:absolute;z-index:2;left:50%;top:calc(var(--sy) + 12vh + var(--t)*(100vh - var(--sy) - 34vh));width:min(34vw,170px);translate:-50% -50%;scale:calc(.3 + var(--t)*.9);opacity:clamp(0,min(var(--t)*12,(1 - var(--t))*12),1);filter:drop-shadow(0 0 22px #ff8a2a)}
+.walker svg{animation:waddle .5s ease-in-out infinite alternate}
+@keyframes waddle{from{rotate:-6deg;translate:0 -4px}to{rotate:6deg;translate:0 4px}}
+.walker b{width:40%;aspect-ratio:1;font-size:min(9vw,44px)}
+.c-count{position:absolute;right:16px;bottom:18px;z-index:3;font:600 18px "Mitr";padding:8px 14px;border-radius:14px;background:#0f0820cc}
+
+/* night: lottery */
+.lotto{height:280vh}
+.lotto .stick{overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:150px 16px 24px;background:radial-gradient(ellipse at 50% 35%,#4a1a80,#0f0820 70%)}
+.ticket{position:relative;padding:16px 26px 22px;border-radius:22px;background:linear-gradient(135deg,#ffd77a,#ff8a2a);color:#2a1640;box-shadow:0 20px 60px #ff8a2a55;mask:radial-gradient(circle 14px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 14px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat;animation:tk 2s ease-in-out infinite alternate}
+@keyframes tk{from{rotate:-2deg}to{rotate:2deg}}
+.ticket small{display:block;text-align:center;font:600 13px "Mitr";letter-spacing:.35em}
+.reels{display:flex;gap:6px;margin-top:8px}
+.reels b{width:clamp(38px,10vw,64px);aspect-ratio:3/4;display:grid;place-items:center;border-radius:10px;background:#1a0d2e;color:#fff;font:600 clamp(26px,7vw,46px) "Mitr";font-variant-numeric:tabular-nums;box-shadow:inset 0 -8px 14px #0008}
+.lot-prizes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(100%,560px)}
+.lp{text-align:center;padding:16px 10px;border-radius:20px;background:#ffffff10;border:1px solid #fff2;opacity:.35;transform:scale(.92);transition:all .5s cubic-bezier(.2,1.5,.4,1)}
+.lp small{font:500 14px "Mitr";color:var(--muted)}
+.lp b{display:block;font:600 clamp(30px,7vw,48px)/1.15 "Mitr";color:var(--orange);font-variant-numeric:tabular-nums}
+.lp span{font:500 14px "Mitr"}
+.lotto[data-k="0"] .lp:nth-child(1),.lotto[data-k="1"] .lp:nth-child(2){opacity:1;transform:scale(1.04);border-color:var(--gold);background:#ffc8611a;box-shadow:0 0 40px #ffc86155}
+.lotto[data-k="1"] .lp:nth-child(1){opacity:.7}
+.warn-sign{width:min(100%,560px);padding:10px;border-radius:20px;background:repeating-linear-gradient(-45deg,#ffc400 0 18px,#1a0d2e 18px 36px);box-shadow:0 0 50px #ffc40066;animation:warn 1.6s ease-in-out infinite}
+.warn-sign>div{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:#ffc400;color:#1a0d2e}
+.warn-sign svg{flex:none;width:clamp(44px,12vw,64px)}
+.warn-sign b{font:600 clamp(20px,5.4vw,30px)/1.25 "Mitr"}
+@keyframes warn{50%{scale:1.03;box-shadow:0 0 80px #ffc400aa}}
+.confetti{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
+.lotto[data-k="1"] .confetti{opacity:1}
+.confetti i{position:absolute;top:-30px;width:9px;height:15px;border-radius:2px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(calc(100vh + 60px)) rotate(720deg)}}
+
+/* night: thank you */
+.bye .big{background:linear-gradient(90deg,var(--orange),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.1em}
+.bye-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:720px;margin:30px auto 0}
+.bye-c{display:flex;flex-direction:column;gap:4px;padding:18px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.bye-c b{font:600 clamp(20px,3.4vw,26px) "Mitr"}
+.bye-c span{font:500 14px "Mitr";color:var(--muted)}
+.bye-c.warn{border-color:var(--orange);background:#ff7a1a1a}
+.bye-c.warn b{color:var(--orange)}
+.bye-safe{margin-top:26px;font:500 clamp(18px,3vw,22px) "Mitr";color:var(--gold)}
+@media (max-width:600px){.bye-grid{grid-template-columns:1fr}}
+
+/* end switch */
+.end{min-height:90vh;display:grid;place-items:center;text-align:center;padding:60px 16px;position:relative;z-index:2}
+.end .big{font:600 clamp(60px,16vw,160px)/1 "Mitr";letter-spacing:-.02em}
+.end .lbl{font:500 20px "Mitr";color:var(--muted);margin-bottom:10px}
+.end .big.see{font-size:clamp(110px,30vw,300px);background:linear-gradient(135deg,var(--orange),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .05em .08em}
+.end:has(.see) .lbl{font-size:clamp(24px,5vw,40px);color:var(--ink);font-weight:600}
+.go{margin-top:26px;display:inline-flex;align-items:center;gap:10px;font:500 20px "Mitr";border:0;padding:16px 30px;border-radius:99px;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--purple),#2b0f5c);box-shadow:0 14px 40px #6b2fb355;transition:transform .2s}
+.go:hover{transform:scale(1.06) rotate(-2deg)}
+.go.to-day{background:linear-gradient(135deg,var(--orange),var(--gold));color:#2a1640}
+.go svg{width:24px;height:24px}
+.foot{text-align:center;padding:30px 16px 50px;color:var(--muted);font:500 13px "Mitr";letter-spacing:.2em}
+
+@media (max-width:600px){
+  .tl{padding-left:64px}.tl::before,.tl .fill{left:46px}.tl .runner{left:32px}
+  .tl-time{left:-64px;width:42px;font-size:15px}.tl-dot{left:-25px}
+  .toggle button span{display:none}
+  .cd div{min-width:58px}.cd b{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="pumpkin" viewBox="0 0 100 90"><rect x="46" y="2" width="8" height="16" rx="3" fill="#3d7a2a"/><ellipse cx="30" cy="54" rx="24" ry="33" fill="#e8610c"/><ellipse cx="70" cy="54" rx="24" ry="33" fill="#e8610c"/><ellipse cx="50" cy="54" rx="24" ry="35" fill="#ff7f1f"/><path d="M30 42l10 10H22zM70 42l8 10H60zM28 64q22 18 44 0l-6 8-6-6-6 8-6-8-6 8-6-6z" fill="#3a1a05"/></symbol>
+  <symbol id="ghost" viewBox="0 0 80 90"><path d="M8 48Q8 6 40 6t32 42v38l-8-8-8 8-8-8-8 8-8-8-8 8-8-8-8 8z" fill="#fff" stroke="#2a1640" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="51" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="40" cy="58" rx="6" ry="5" fill="#2a1640"/></symbol>
+  <symbol id="bat" viewBox="0 0 100 50"><path fill="currentColor" d="M50 18C46 10 42 10 40 16 34 8 22 6 10 12c8 4 10 12 8 20 8-6 16-4 20 2 4-6 8-6 12-2 4-4 8-4 12 2 4-6 12-8 20-2-2-8 0-16 8-20-12-6-24-4-30 4-2-6-6-6-10 2z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="4"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14"/></symbol>
+  <symbol id="i-frame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="currentColor" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></symbol>
+</svg>
+
+<div class="bar"></div>
+<div class="glow"></div>
+<header class="top">
+  <div class="brand">SPORTDAY <b>2026</b></div>
+  <div class="toggle">
+    <div class="pill"></div>
+    <button data-to="day"><svg><use href="#i-sun"/></svg><span>กลางวัน</span></button>
+    <button data-to="night"><svg><use href="#i-moon"/></svg><span>กลางคืน</span></button>
+  </div>
+</header>
+
+<!-- ================= DAY ================= -->
+<main data-show="day">
+  <section class="scene hero" data-p>
+    <div class="stick">
+      <div class="sky"></div><div class="sunset"></div>
+      <div class="sun"></div>
+      <div class="cloud" style="top:16%;width:110px;animation-duration:48s;animation-delay:-10s"></div>
+      <div class="cloud" style="top:30%;width:150px;animation-duration:70s;animation-delay:-40s"></div>
+      <div class="cloud" style="top:9%;width:90px;animation-duration:58s;animation-delay:-25s"></div>
+      <div class="hills"><svg viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0 140Q160 40 330 120T680 100T1000 120V300H0z" fill="#ffb15c"/><path d="M0 200Q200 110 420 190T820 170T1000 190V300H0z" fill="#ff8a2a"/></svg></div>
+      <svg class="floaty rise" style="left:6%;bottom:9%;width:min(18vw,120px)"><use href="#pumpkin"/></svg>
+      <svg class="floaty rise" style="right:8%;bottom:12%;width:min(14vw,96px);animation-delay:-1.5s"><use href="#pumpkin"/></svg>
+      <svg class="floaty" style="left:12%;top:24%;width:min(12vw,74px);animation-delay:-2s"><use href="#ghost"/></svg>
+      <svg class="floaty" style="right:14%;top:40%;width:min(10vw,60px);animation-delay:-.6s"><use href="#ghost"/></svg>
+      <div class="hero-title">
+        <div class="eyebrow">HALLOWEEN SPORTDAY</div>
+        <h1 class="split">กีฬาสี</h1>
+        <div class="date">ศุกร์ 31 ต.ค. 2569 · 11:00 – 14:30</div>
+        <div class="cd" data-cd="day"></div>
+      </div>
+      <div class="scrollcue"></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap wider"><div class="sec-h"><h2>สถานที่จัดงาน & ที่พัก</h2><span>New Travel Beach</span></div>
+      <div class="hotel-ui">
+        <nav class="lm">
+          <button class="on" data-lm="all"><i style="--c:#2a1640"></i><b>ภาพรวมรีสอร์ต</b></button>
+          <button data-lm="venue"><i style="--c:#6b2fb3"></i><b>ห้องประชุมสายลม</b><small>สถานที่จัดงาน เช้า · เย็น</small></button>
+          <button data-lm="lunch"><i style="--c:#e2456f"></i><b>ที่ทานข้าวเที่ยง</b><small>ห้องอาหารเพลินทะเล</small></button>
+          <button data-lm="breakfast"><i style="--c:#e2456f"></i><b>ที่ทานข้าวเช้า</b><small>ห้องอาหารเพลินทะเล</small></button>
+          <button data-lm="garden"><i style="--c:#3fa65a"></i><b>ห้องการ์เด้นวิว</b><small>ห้อง 7xx</small></button>
+          <button data-lm="pool"><i style="--c:#1e9bd1"></i><b>ห้องพักริมสระน้ำ</b><small>ห้อง 6xx</small></button>
+          <button data-lm="deluxe"><i style="--c:#ff7a1a"></i><b>ห้องพักดีลักซ์</b><small>ห้อง 100–400 · F1 F2</small></button>
+        </nav>
+        <div class="hotel-main">
+          <div class="hotel-view" data-view="resort"><svg class="hotel-map" viewBox="0 0 1526 1000"></svg><div class="tower-plan"></div>
+            <button class="zoom-btn" aria-label="ซูม"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M7.5 10.5h6"/><path class="zi" d="M10.5 7.5v6"/></svg></button></div>
+          <div class="found"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>แนะนำน้องใหม่</h2><span data-newbie-count></span></div>
+    <div class="newbies"></div>
+  </div></section>
+
+  <section class="scene vs" data-p>
+    <div class="stick">
+      <div class="side o"><div class="sub">สีส้ม</div><h2>ส้มบี้<br>ขยี้ม่วง</h2>
+        <div class="crew"><div class="m l"><img src="assets/mae-o-1.png" alt=""><b>คุณโจ</b></div><div class="m boss"><img src="assets/mae-o-2.png" alt=""><b><small>แม่สี</small>คุณบอส</b></div><div class="m r"><img src="assets/mae-o-3.png" alt=""><b>คุณแต้ว</b></div></div></div>
+      <div class="side p"><div class="sub">สีม่วง</div><h2>ม่วงพุ่งปรี๊ด<br>จี๊ดถึงดาว</h2>
+        <div class="crew"><div class="m l"><img src="assets/mae-p-1.png" alt=""><b>คุณจ๋อม</b></div><div class="m boss"><img src="assets/mae-p-2.png" alt=""><b><small>แม่สี</small>คุณนุ๊ก</b></div><div class="m r"><img src="assets/mae-p-3.png" alt=""><b>คุณเผือก</b></div></div></div>
+      <div class="vsbadge">VS</div>
+      <div class="dress">เสื้อดำ กางเกงดำ<small>ผ้าพันคอ รับได้ที่แม่สี<i style="background:#ff7a1a"></i><i style="background:#8d4ee0;margin-left:0"></i></small></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>เปิดสนาม</h2><span>11:00 – 12:20</span></div>
+    <ol class="tl" data-list="d1"></ol>
+  </div></section>
+
+  <section class="scene games">
+    <div>
+      <div class="games-h sec-h"><h2>5 เกมหลอน</h2><span>เริ่ม 12:20</span></div>
+      <div class="track"></div>
+      <div class="dots"></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>ปิดสนาม</h2><span>14:30</span></div>
+    <ol class="tl" data-list="d2"></ol>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>คะแนน & รางวัล</h2></div>
+    <div class="prizes">
+      <div class="prize win">
+        <div class="win-vs">
+          <div class="wv o"><svg><use href="#pumpkin"/></svg><span>ส้ม</span></div>
+          <div class="wq">?</div>
+          <div class="wv p"><svg><use href="#ghost"/></svg><span>ม่วง</span></div>
+        </div>
+        <div class="lbl">สีไหนจะชนะ</div>
+        <div class="amt"><span data-count="3000">0</span><small>บาท</small></div>
+      </div>
+      <div class="prize"><div class="lbl">ชนะเกม</div><div class="amt">+<span data-count="10">0</span><small>คะแนน</small></div></div>
+      <div class="prize"><div class="lbl">เชียร์ลีดเดอร์เต้นทันที</div><div class="amt">+<span data-count="2">0</span><small>คะแนน</small></div></div>
+    </div>
+  </div></section>
+
+  <section class="end">
+    <div>
+      <div class="lbl">เจอกันอีกที</div>
+      <div class="big see">16:30</div>
+      <button class="go" data-to="night"><svg><use href="#i-moon"/></svg>Dark Mode</button>
+    </div>
+  </section>
+</main>
+
+<!-- ================= NIGHT ================= -->
+<main data-show="night">
+  <section class="scene hero" data-p>
+    <div class="stick">
+      <div class="sky"></div>
+      <div class="stars"></div>
+      <div class="moon"></div>
+      <div class="castle"><svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMax slice"><path fill="#0b0618" d="M0 400V300l60-20 40 30 60-40 80 30V170l10-40 10 40v70h30V150l15-60 15 60v90h40V200l12-30 12 30v60l70-30 60 40 60-30V180l14-50 14 50v70h40V120l18-70 18 70v130h30V190l12-36 12 36v80l60-30 70 30 60-50 80 40 60-20 20 10v170z"/><g fill="#ffb84d"><rect x="350" y="200" width="8" height="14"/><rect x="580" y="170" width="8" height="14"/><rect x="608" y="220" width="8" height="14"/><rect x="455" y="230" width="8" height="14"/><rect x="278" y="250" width="8" height="12"/></g></svg></div>
+      <div class="fog"></div>
+      <svg class="floaty rise" style="left:5%;bottom:6%;width:min(18vw,120px)"><use href="#pumpkin"/></svg>
+      <svg class="floaty rise" style="right:6%;bottom:8%;width:min(14vw,96px);animation-delay:-1.2s"><use href="#pumpkin"/></svg>
+      <div class="hero-title">
+        <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
+        <h1 class="split night-h">100 คืนหลอน</h1>
+        <div class="h1-sub">คน ช.ที.เอ็ม</div>
+        <div class="date">ศุกร์ 31 ต.ค. 2569 · 16:30 – 23:00</div>
+        <div class="cd" data-cd="night"></div>
+      </div>
+      <div class="scrollcue" style="border-color:#fff"></div>
+    </div>
+  </section>
+
+  <section class="route">
+    <svg class="road"><path class="base"/><path class="dash"/><path class="done"/></svg>
+    <div class="stop"><div class="box reg">
+      <div class="big-t">16:30</div>
+      <div class="big-l">เริ่มลงทะเบียน</div>
+      <div class="yant-row"><svg class="yant" viewBox="0 0 40 70"><rect x="2" y="2" width="36" height="66" rx="2" fill="#ffd84a" stroke="#c4122a" stroke-width="2"/><path d="M10 12h20M20 12v14M11 22q9 8 18 0M12 34c6-6 10 6 16 0M20 30v26M12 46h16M14 56q6 6 12 0" stroke="#c4122a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg><span>รับยันต์กันผีจุดลงทะเบียน</span></div>
+    </div></div>
+    <div class="mascot"><img src="assets/mascot.png" alt=""></div>
+  </section>
+
+  <section class="scene hall" data-hall>
+    <div class="stick">
+      <div class="hall-title">ผังห้องจัดเลี้ยง</div>
+      <svg class="hall-map" viewBox="0 0 1125 1400" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="callout"><small></small><b></b><span></span></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>Free time</h2><span>กิจกรรมระหว่างทานอาหาร</span></div>
+    <div class="ft-grid">
+      <div class="ft-card ft-menu ft-wide">
+        <h3>โต๊ะจีน</h3>
+        <ol class="menu">
+          <li>หมูมะนาว</li><li>ทอดมันปลา</li><li>เขียวหวานไก่ผัดแห้ง</li><li>ทะเลผัดพริกเผา</li>
+          <li>ต้มยำรวมมิตรน้ำข้น</li><li>ปลากะพงราดน้ำปลา</li><li>ข้าวสวย</li><li>ทับทิมกรอบ</li>
+        </ol>
+      </div>
+      <div class="ft-card">
+        <figure class="shot"><img class="zoomable" src="assets/band.webp" alt="" style="object-position:50% 30%;cursor:zoom-in"></figure>
+        <h3>วงสีลมซอย7</h3><div class="tags"><span class="tag p">วงดนตรี</span></div>
+      </div>
+      <div class="ft-card">
+        <span class="ft-badge">พิเศษ</span>
+        <figure class="shot art"><svg viewBox="0 0 160 120">
+          <g class="steam" stroke="#fff8" stroke-width="3" fill="none" stroke-linecap="round"><path d="M62 30q-6-8 0-16t0-16"/><path d="M80 26q-6-8 0-16t0-16"/><path d="M98 30q-6-8 0-16t0-16"/></g>
+          <rect class="pestle" x="104" y="6" width="12" height="62" rx="6" fill="#a8672f" transform="rotate(28 110 40)"/>
+          <g stroke="#9be35a" stroke-width="3" stroke-linecap="round"><path d="M46 52l18-10M58 54l20-12M74 52l16-12M86 54l18-8M66 48l6-12"/></g>
+          <circle cx="58" cy="52" r="7" fill="#ff4d3d"/><circle cx="96" cy="50" r="6" fill="#ff4d3d"/>
+          <path d="M70 50q8-10 16-4" stroke="#e01e1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M30 56h100q-6 44-50 44T30 56z" fill="#7a4520"/><path d="M30 56h100" stroke="#5a3115" stroke-width="6" stroke-linecap="round"/>
+          <ellipse cx="80" cy="104" rx="30" ry="6" fill="#5a3115"/>
+        </svg></figure>
+        <h3>ซุ้มส้มตำ</h3>
+        <p class="ft-txt"><b>โต๊ะละ 1 ชุด</b> ไก่ย่าง 3 ไม้ + ข้าวเหนียว 4 ห่อ</p>
+        <p class="ft-txt"><b>ส้มตำ</b> ไปตักเองที่ซุ้มได้เลย (บุฟเฟ่ต์)</p>
+      </div>
+      <div class="ft-card">
+        <div class="fan">
+          <img src="assets/photobooth-1.jpg" alt="" style="--k:-2">
+          <img src="assets/photobooth-2.jpg" alt="" style="--k:-1">
+          <img src="assets/photobooth-3.jpg" alt="" style="--k:0">
+          <img src="assets/photobooth-4.jpg" alt="" style="--k:1">
+          <img src="assets/photobooth-5.jpg" alt="" style="--k:2">
+        </div>
+        <h3>Photobooth</h3><div class="tags"><span class="tag o">16:30 – 19:30</span></div>
+        <p class="ft-txt">ถ่ายไม่อั้น มีให้เลือก 5 แบบ แต่มาช้า ระวังคนเยอะน้าา</p>
+        <p class="ft-txt">จิ้มที่ภาพเพื่อดูแบบได้เลย</p>
+      </div>
+      <div class="ft-card ft-wide ft-backdrop">
+        <img class="wide zoomable" src="assets/backdrop.png" alt="">
+        <div><h3>Backdrop</h3><div class="tags"><span class="tag p">ถ่ายรูป</span></div>
+          <p class="ft-txt">มาถ่ายรูป เปิดแฟลชที่จุดนี้แบบ Y2K กันได้เลย~</p></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="scene blackout" data-p data-blackout>
+    <div class="stick">
+      <div class="bo-bg"></div>
+      <div class="clock">
+        <div class="face"><i class="hh"></i><i class="mh"></i><b></b></div>
+        <div class="digi" data-clock>18:56</div>
+      </div>
+      <div class="bo-reveal"><div class="beams"></div><div class="deco"></div><div style="position:relative">
+        <div class="k">19:00</div>
+        <div class="t">เริ่มกิจกรรมช่วงเย็น</div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>พิธีเปิด</h2><span>19:10 – 19:30</span></div>
+    <ol class="tl" data-list="n2"></ol>
+  </div></section>
+
+  <section class="scene carpet" data-p>
+    <div class="stick">
+      <div class="spots"><i></i><i></i><i></i></div>
+      <div class="c-head"><div class="t">19:30 ประกวดชุดแฟนซี</div></div>
+      <div class="stage"></div>
+      <div class="runway"><div class="rug"></div></div>
+      <div class="teams"></div>
+      <div class="c-count"><span data-teamcount>0</span> / 10 ทีม</div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>โหวต & ประกาศผล</h2><span>19:40 – 20:25</span></div>
+    <ol class="tl" data-list="n3"></ol>
+  </div></section>
+
+  <section class="scene lotto" data-p data-lotto>
+    <div class="stick">
+      <div class="confetti"></div>
+      <div class="c-head"><div class="t">20:25 จับรางวัลใหญ่</div></div>
+      <div class="ticket"><small>LOTTERY</small><div class="reels"><b>0</b><b>0</b><b>0</b><b>0</b><b>0</b><b>0</b></div></div>
+      <div class="lot-prizes">
+        <div class="lp"><small>รางวัลที่ 2</small><b>5,000</b><span>บาท × 2 รางวัล</span></div>
+        <div class="lp"><small>รางวัลที่ 1</small><b>10,000</b><span>บาท × 1 รางวัล</span></div>
+      </div>
+      <div class="warn-sign"><div><svg viewBox="0 0 24 22"><path d="M12 1 23 21H1z" fill="#1a0d2e"/><path d="M12 8v6" stroke="#ffc400" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.4" fill="#ffc400"/></svg><b>ต้องอยู่ในงาน<br>และพกยันต์ติดตัวเท่านั้น</b></div></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>ปาร์ตี้</h2><span>21:00 – 23:00</span></div>
+    <ol class="tl" data-list="n4"></ol>
+  </div></section>
+
+  <section class="end bye">
+    <div>
+      <div class="big">Thank you</div>
+      <div class="bye-grid">
+        <div class="bye-c warn"><b>อ้วก = ปรับ</b><span>จ่ายเอง</span></div>
+        <div class="bye-c"><b>ก่อน 11:00 น.</b><span>ทานอาหารเช้า · เช็กเอาต์</span></div>
+        <div class="bye-c"><b>คืนกุญแจ</b><span>ตัวแทนคืนได้ที่ฟรอนต์โรงแรม</span></div>
+      </div>
+      <div class="bye-safe">เดินทางกลับโดยสวัสดิภาพ</div>
+      <button class="go to-day" data-to="day"><svg><use href="#i-sun"/></svg>กลับไปกลางวัน</button>
+    </div>
+  </section>
+</main>
+
+<div class="lightbox"><img alt=""></div>
+<div class="tbl-pop"><div class="tbl-card"><b></b><ol></ol></div></div>
+<div class="roster-pop"><div class="roster-wrap"><div class="roster-card"></div><button class="roster-x" aria-label="ปิด"><svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button></div></div>
+<div class="foot">SPORTDAY 2026 · 31.10.2569</div>
+
+<script>
+const DATE = '2026-10-31';
+const at = t => new Date(`${DATE}T${t}:00+07:00`);
+
+const LISTS = {
+  d1: [
+    ['11:00','12:00','ลงทะเบียน + รับข้าวกล่อง','มาถึงก่อน รับข้าวกล่องกับกรรมการได้เลย',['กะเพราหมู','พริกแกงไก่']],
+    ['12:00','12:10','เปิดงานกีฬา','',[]],
+    ['12:10','12:20','เปิดตัวแม่สี','',['o:ส้ม','p:ม่วง']],
+  ],
+  d2: [
+    ['14:30','','รวมคะแนน + ประกาศผลกีฬา','',['สีชนะ 3,000 บาท']],
+  ],
+  n2: [
+    ['19:10','19:30','พิธีเปิด','คุณนริศกล่าวเปิดงาน',[]],
+  ],
+  n3: [
+    ['19:40','19:50','โหวตชุดแฟนซี','ทุกคนโหวต 1 ทีม',['QR Code']],
+    ['19:50','20:00','ประกาศผลชุดแฟนซี','',[]],
+    ['20:00','20:10','ประกาศผล Mr. / Ms. CHTM','บุคคลที่โดดเด่นที่สุด',['1,000 × 2']],
+    ['20:10','20:25','ประกาศรองประธานปี 70','จากโพลการเลือกล่วงหน้า · ขึ้นเวทีทำภารกิจตามโหวต',['ภารกิจ']],
+  ],
+  n4: [
+    ['21:00','23:00','ปาร์ตี้','ดนตรียาว ๆ',['วงสีลมซอย7']],
+  ],
+};
+
+const GAMES = [
+  ['12:30','12:45','ใบ้คำฮาโลวีน','จับฉลากหมวด ผี / สัตว์ประหลาดและสิ่งของ ทีมละ 3 นาที ผู้ทาย 1 ผู้ใบ้ 9',10,'q'],
+  ['12:50','13:05','คีบลูกตา','ตะเกียบคีบลูกปิงปองลูกตาไปอีกฝั่ง ตกเริ่มใหม่ ครบ 10 ลูกก่อนชนะ',10,'eye'],
+  ['13:10','13:25','พันธมิตรมัมมี่','5 คนพันทิชชู่ให้อีก 1 คนเป็นมัมมี่ แล้ววิ่งเข้าเส้นชัย',6,'mummy'],
+  ['13:30','13:45','จับผีใส่กระด้ง','ใช้พัดโบกตัวผีกระดาษให้เข้ากระด้ง',6,'ghost'],
+  ['13:50','14:05','ดื่มให้ลืมหลอน','เบียร์สีละ 8 กระป๋อง ดื่มต่อกันทีละคน ครบก่อนชนะ',8,'can'],
+];
+// athletes per game, same order as GAMES: [orange, purple], each "ชื่อ/สาขา"
+const ROSTER = [
+  ['อั้น/บ้านฉาง ปอย/สนญ. เน๊ะ/แหลมงอบ บอส/สนญ. ตรอ. พลอย/มาบตาพุด เจน/มาบตาพุด อิน/สนญ. กฎหมาย เรย์/สนญ. กฎหมาย คุณแพรวพราว/สนญ. พัฒนาหนี้ คุณตุ๋มติ๋ม/สนญ. ประกัน',
+   'ต่าย/โนนสูง ถิง/มิตรภาพ พี่เหมียว/มิตรภาพ โบว์/สนามชัยเขต ยศ/สนามชัยเขต อุ๊/สนามชัยเขต แขก/ปากช่อง แจม/จอหอ เผือก/พนมสารคาม หญิง/พนมสารคาม'],
+  ['นุช/แหลมงอบ แนน/นายายอาม ชมพู่/เขาชะเมา เตย/เขาชะเมา เบ้น/นครปฐม ปลา/นครปฐม ลิ/ปลวกแดง แป๋ว/ปลวกแดง ต่าย/ประแสร์ พี่สา/เนินพระ',
+   'วี/ประโคนชัย อร/ประโคนชัย ส้ม/ประโคนชัย ตั๊ก/สระแก้ว พลอย/สระแก้ว ดาว/สีคิ้ว กระแต/ด่านขุนทด แมน/สระแก้ว โย/ฉก. นิว/บุรีรัมย์'],
+  ['โจ/กำแพงแสน ครีม/ชลบุรี มล/มะขาม มายด์/บ่อทอง กันต์/ตลาดซุ้ย นัท/ท่าใหม่',
+   'หญิง/คลองหาด ป๊อป/คลองหาด นุช/เขาฉกรรจ์ ทราย/วังสมบูรณ์ ศล/วังสมบูรณ์ เหมียว/วังน้ำเย็น'],
+  ['โบว์/ทับช้าง น้อง/สอยดาว ชมพู่/สอยดาว แพร/ทับไทร อ้อ/ทับไทร คุณดาว/สนญ.',
+   'ปลา/พิมาย เบนซ์/พิมาย อ๋อง/บุรีรัมย์ แจง/บุรีรัมย์ ข้าวฟ่าง/ลำปลายมาศ นุ่น/จอหอ'],
+  ['โอ๊ค/วังจันทร์ บีม/ประแสร์ แบงค์/ขลุง แอม/นายายอาม หนิง/นครปฐม ปลา/ห้วยพลู นิ้ง/สนญ. หน่อง/บ้านฉาง',
+   'ทราย/นางรอง ปูเป้/นางรอง นัน/บ้านโพธิ์ เบ๊ค/ลำปลายมาศ ไมค์/ลำปลายมาศ น้อง/โคกอุดม ดรีม/ปากช่อง โบว์/ปากช่อง'],
+].map(g => g.map(s => s.split(/ (?=[^ /]+\/)/).map(p => p.split('/'))));
+const ICONS = {
+  q:'<svg class="ic" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#fff3"/><text x="40" y="56" text-anchor="middle" font-family="Mitr" font-weight="600" font-size="48" fill="#fff">?</text></svg>',
+  eye:'<svg class="ic" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="#fff"/><path d="M12 30q10 4 14 0M60 18q-2 10 4 14M14 56q10-2 12 6" stroke="#e22" stroke-width="2" fill="none"/><circle cx="44" cy="38" r="15" fill="#2fa3ff"/><circle cx="44" cy="38" r="7" fill="#111"/><circle cx="48" cy="34" r="3" fill="#fff"/></svg>',
+  mummy:'<svg class="ic" viewBox="0 0 80 80"><rect x="16" y="8" width="48" height="68" rx="22" fill="#f4ecd8"/><g stroke="#cbbf9f" stroke-width="3"><path d="M16 24l48-6M16 46l48-8M16 60l48 4M18 70l44-6"/></g><rect x="22" y="30" width="36" height="12" rx="6" fill="#2a1640"/><circle cx="32" cy="36" r="3" fill="#ffd400"/><circle cx="48" cy="36" r="3" fill="#ffd400"/></svg>',
+  ghost:'<svg class="ic"><use href="#ghost"/></svg>',
+  can:'<svg class="ic" viewBox="0 0 80 80"><rect x="22" y="10" width="36" height="62" rx="8" fill="#ffd34d"/><rect x="22" y="10" width="36" height="8" rx="4" fill="#ddd"/><rect x="22" y="30" width="36" height="22" fill="#fff"/><text x="40" y="47" text-anchor="middle" font-family="Mitr" font-weight="600" font-size="14" fill="#c4122a">BEER</text></svg>',
+};
+
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+/* ---------- render ---------- */
+for (const [key, items] of Object.entries(LISTS)) {
+  const ol = $(`[data-list="${key}"]`);
+  ol.innerHTML = `<div class="fill"></div><svg class="runner floaty"><use href="#${key[0] === 'd' ? 'pumpkin' : 'ghost'}"/></svg>` +
+    items.map(([s, e, h, p, tags]) => `<li class="tl-item" data-s="${s}" data-e="${e}">
+      <div class="tl-time">${s}<small>${e}</small></div><div class="tl-dot"></div>
+      <div class="card"><h3>${h}<span class="st"></span></h3>${p ? `<p>${p}</p>` : ''}
+      <div class="tags">${tags.map(t => { const [c, v] = t.includes(':') ? t.split(':') : ['', t]; return `<span class="tag ${c}">${v}</span>`; }).join('')}</div></div></li>`).join('');
+}
+$('.track').innerHTML = GAMES.map(([s, e, h, p, n, ic], i) => `<article class="game" style="--r:${i % 2 ? 2 : -2}">
+  <div class="num">0${i + 1}</div>${ICONS[ic]}<h3>${h}</h3><p>${p}</p>
+  <div class="meta"><span>สีละ ${n} คน</span><span>ชนะ +10</span>${i < 4 ? '<span>พัก 5 นาที · ทีมแพ้ดื่ม</span>' : ''}</div>
+  <button class="roster-btn">รายชื่อนักกีฬา</button></article>`).join('');
+const rosterPop = $('.roster-pop');
+$$('.track .game').forEach((g, i) => g.addEventListener('click', () => {
+  const side = (k, cls, name) => `<div class="rs ${cls}"><h4>${name}</h4><ol>${ROSTER[i][k].map(([n, b]) => `<li>${n}<small>${b}</small></li>`).join('')}</ol></div>`;
+  $('.roster-card', rosterPop).innerHTML = `<b>${GAMES[i][2]}<small>สีละ ${GAMES[i][4]} คน</small></b><div class="rs-cols">${side(0, 'o', 'ส้มบี้ขยี้ม่วง')}${side(1, 'p', 'ม่วงพุ่งปรี๊ด จี๊ดถึงดาว')}</div>`;
+  rosterPop.classList.add('open');
+  document.documentElement.style.overflow = 'hidden'; // page behind stays put while the card is open
+}));
+const closeRoster = () => { rosterPop.classList.remove('open'); document.documentElement.style.overflow = ''; };
+rosterPop.addEventListener('click', e => e.target === rosterPop && closeRoster());
+$('.roster-x').addEventListener('click', closeRoster);
+$('.dots').innerHTML = GAMES.map(() => '<i></i>').join('');
+const track = $('.track'), games = $$('.game', track);
+// dots follow whichever card is nearest the middle of the swipe row
+track.addEventListener('scroll', () => {
+  const mid = track.scrollLeft + track.clientWidth / 2;
+  const k = games.reduce((b, g, i) => Math.abs(g.offsetLeft + g.offsetWidth / 2 - mid) < Math.abs(games[b].offsetLeft + games[b].offsetWidth / 2 - mid) ? i : b, 0);
+  $$('.dots i').forEach((d, i) => d.classList.toggle('on', i === k));
+}, { passive: true });
+$$('.dots i').forEach((d, i) => d.addEventListener('click', () => track.scrollTo({ left: games[i].offsetLeft - (track.clientWidth - games[i].offsetWidth) / 2, behavior: 'smooth' })));
+$('.dots i').classList.add('on');
+const ghostTeam = (cls, i) => `<div class="${cls}" style="--i:${i}"><svg viewBox="0 0 80 90"><use href="#ghost"/></svg><b>${i + 1}</b></div>`;
+$('.teams').innerHTML = Array.from({ length: 10 }, (_, i) => ghostTeam('walker', i)).join('');
+$('.carpet .stage').innerHTML = Array.from({ length: 10 }, (_, i) => ghostTeam('slot', i)).join('');
+const DECO_BOX = { pumpkin: '0 0 100 90', ghost: '0 0 80 90', bat: '0 0 100 50' };
+$('.deco').innerHTML = Array.from({ length: 14 }, (_, i) => {
+  const a = i / 14 * Math.PI * 2 + .3, r = .75 + Math.random() * .35, k = Object.keys(DECO_BOX)[i % 3];
+  return `<i style="--x:${(Math.cos(a) * 40 * r).toFixed(1)};--y:${(Math.sin(a) * 36 * r).toFixed(1)};--w:${(k === 'bat' ? 70 : 50) + Math.random() * 30 | 0}px;--d:${(-Math.random() * 2).toFixed(2)}s"><svg viewBox="${DECO_BOX[k]}"><use href="#${k}"/></svg></i>`;
+}).join('');
+$('.confetti').innerHTML = Array.from({ length: 50 }, (_, i) => `<i style="left:${Math.random() * 100}%;background:${['#ff8a2a', '#ffc861', '#a066ff', '#fff'][i % 4]};animation-duration:${2 + Math.random() * 2}s;animation-delay:${-Math.random() * 4}s"></i>`).join('');
+$('.stars').innerHTML = Array.from({ length: 90 }, () => `<i style="left:${Math.random() * 100}%;top:${Math.random() * 70}%;animation-delay:${-Math.random() * 3}s;scale:${.5 + Math.random() * 1.2}"></i>`).join('');
+$$('.split').forEach(h => h.innerHTML = [...new Intl.Segmenter('th', { granularity: 'grapheme' }).segment(h.textContent)].map(({ segment: c }, i) => `<span style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join(''));
+
+/* ---------- mode ---------- */
+const root = document.documentElement;
+function setMode(m, ev) {
+  if (root.dataset.mode === m) return;
+  const apply = () => { root.dataset.mode = m; scrollTo({ top: 0, behavior: 'instant' }); requestAnimationFrame(onScroll); };
+  if (ev) { root.style.setProperty('--vx', ev.clientX + 'px'); root.style.setProperty('--vy', ev.clientY + 'px'); }
+  document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches ? document.startViewTransition(apply) : apply();
+}
+$$('[data-to]').forEach(b => b.addEventListener('click', e => setMode(b.dataset.to, e)));
+// always open on the daytime sports day; #night is only for a direct link
+root.dataset.mode = location.hash === '#night' ? 'night' : 'day';
+
+/* ---------- scroll scenes ---------- */
+function prog(el) { const r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight)); }
+function onScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  root.style.setProperty('--sp', max > 0 ? scrollY / max : 0);
+  const main = $(`main[data-show="${root.dataset.mode}"]`);
+  $$('[data-p]', main).forEach(el => {
+    const p = prog(el); el.style.setProperty('--p', p);
+    if (el.hasAttribute('data-blackout')) {
+      const st = p < .1 ? 0 : Math.min(5, Math.floor((p - .1) / .1) + 1);
+      if (el.dataset.stage != st) {
+        const m = 55 + Math.max(st, 1), digi = $('[data-clock]', el);
+        el.dataset.stage = st; el.style.setProperty('--m', m);
+        digi.textContent = m === 60 ? '19:00' : '18:' + m;
+        digi.animate([{ transform: 'rotateX(90deg)' }, { transform: 'none' }], { duration: 280, easing: 'ease-out' });
+      }
+    }
+    const tc = $('[data-teamcount]', el);
+    if (tc) tc.textContent = Math.min(10, Math.floor(p * 10.5));
+    if (el.hasAttribute('data-lotto')) {
+      el.dataset.k = p < .15 ? -1 : p < .55 ? 0 : 1;
+      $$('.reels b', el).forEach((b, i) => b.textContent = Math.floor(p * (37 + i * 11) * 10) % 10);
+    }
+  });
+  if (root.dataset.mode === 'night') { routeTick(); hallTick(); }
+  $$('.tl', main).forEach(tl => {
+    const r = tl.getBoundingClientRect(), line = innerHeight * .6;
+    tl.style.setProperty('--p', clamp((line - r.top) / r.height));
+    $$('.tl-item', tl).forEach(li => li.classList.toggle('lit', li.getBoundingClientRect().top + 16 < line));
+  });
+}
+const route = $('.route'), road = $('.road .base'), roadDone = $('.road .done'), mascot = $('.mascot');
+// road shape in a 100 × (100 per stop) grid, zig-zagging past each stop, scaled to the section's pixel size
+const STOPS = $$('.stop', route).length, GRID_H = STOPS * 100;
+const ROAD = 'M50 0C50 25 80 25 80 50S' + Array.from({ length: STOPS - 1 }, (_, i) => {
+  const x = i % 2 ? 80 : 20; return `${x} ${(i + 1) * 100} ${x} ${(i + 1) * 100 + 50}`;
+}).join(' ') + ` 50 ${GRID_H - 20} 50 ${GRID_H}`;
+let lastX = 0, walkT, roadSize = '', len = 0;
+function routeTick() {
+  const r = route.getBoundingClientRect(), W = r.width, H = r.height - 80;
+  if (roadSize !== W + 'x' + H) {
+    roadSize = W + 'x' + H;
+    let n = 0;
+    const d = ROAD.replace(/[\d.]+/g, v => (n++ % 2 ? v / GRID_H * H : v / 100 * W).toFixed(1));
+    $$('.road path').forEach(p => p.setAttribute('d', d));
+    len = road.getTotalLength();
+    roadDone.style.strokeDasharray = len;
+  }
+  const ty = clamp((innerHeight * .5 - r.top - 40) / H) * H;
+  let lo = 0, hi = len;
+  for (let k = 0; k < 24; k++) { const m = (lo + hi) / 2; road.getPointAtLength(m).y < ty ? lo = m : hi = m; }
+  const pt = road.getPointAtLength(lo);
+  mascot.style.left = pt.x + 'px';
+  mascot.style.top = 40 + pt.y + 'px';
+  if (Math.abs(pt.x - lastX) > .5) mascot.classList.toggle('flip', pt.x < lastX);
+  lastX = pt.x;
+  roadDone.style.strokeDashoffset = len - lo;
+  $$('.stop', route).forEach(s => { const b = s.getBoundingClientRect(); s.classList.toggle('here', b.top < innerHeight * .65 && b.bottom > innerHeight * .2); });
+  mascot.classList.add('walk'); clearTimeout(walkT); walkT = setTimeout(() => mascot.classList.remove('walk'), 200);
+}
+/* ---------- hall map: drawn in table coordinates, camera zooms to one spot per scroll step ---------- */
+const HALL_FULL = [-170, -10, 1465, 1420];
+const STATIONS = {
+  liquor: { r: [-135, 380, 245, 150], t: 'เหล้า · น้ำอัดลม', c:'#7c3fe0', icon: '<path d="M-8-40h16v12l8 10v40h-32v-40l8-10z" fill="#fff"/>' },
+  beer: { r: [-130, 680, 220, 150], t: 'เบียร์สดสิงห์', c: '#d9a400', icon: '<rect x="-18" y="-36" width="30" height="52" rx="4" fill="#fff"/><path d="M12-26h8a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6h-8" stroke="#fff" stroke-width="5" fill="none"/>' },
+  ice: { r: [-130, 1100, 230, 162], t: 'น้ำแข็ง', c: '#1f9bd1', icon: '<rect x="-28" y="-34" width="30" height="30" rx="7" fill="#fff" transform="rotate(-12)"/><rect x="-2" y="-22" width="28" height="28" rx="7" fill="#fff" fill-opacity=".75" transform="rotate(12)"/>' },
+  backdrop: { r: [1030, 1100, 225, 160], t: 'Backdrop', c: '#c4122a', icon: '<rect x="-26" y="-38" width="52" height="40" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M-24 0l14-14 10 10 8-8 16 14" stroke="#fff" stroke-width="5" fill="none"/>' },
+  booth: { r: [1030, 850, 225, 160], t: 'Photobooth', c: '#ff7a1a', icon: '<path d="M-26-30h12l6-8h16l6 8h12v34h-52z" fill="#fff"/><circle cy="-13" r="10" fill="#ff7a1a"/>' },
+};
+// a: the map point the callout arrow touches (top centre of the spot)
+const stationTop = g => { const [x, y, w] = STATIONS[g].r; return [x + w / 2, y]; };
+const HALL = [
+  { t: 'ผังห้องจัดเลี้ยง', box: HALL_FULL },
+  { t: 'ประตูเข้า-ออก', s: '2 ประตู', g: 'door', box: [-100, 1000, 1300, 420], a: [255, 1272] },
+  { t: 'โต๊ะผู้บริหาร', s: 'โต๊ะ 23 – 27', g: 'vip', box: [-100, 930, 1300, 380], a: [560, 1139] },
+  { t: 'โต๊ะพนักงาน 1 – 22', s: 'จิ้มที่โต๊ะเพื่อดูรายชื่อ\nเริ่มวางอาหาร 18:00 เมื่อผีมาครบ 8 ตัว~', g: 'tables', box: [-20, 330, 1165, 800], a: [560, 379] },
+  { t: 'สเตชั่นแอลกอฮอล์', s: 'เอาขวดเปล่ามาแลก', g: 'liquor', box: [-170, 300, 700, 330], a: stationTop('liquor') },
+  { t: 'เบียร์สดสิงห์', s: 'เอาเหยือกเปล่ามาเติม', g: 'beer', box: [-170, 600, 700, 330], a: stationTop('beer') },
+  { t: 'น้ำแข็ง', g: 'ice', box: [-170, 1000, 700, 330], a: stationTop('ice') },
+  { t: 'Photobooth', s: '16:30 – 19:30', g: 'booth', box: [580, 770, 700, 330], a: stationTop('booth') },
+  { t: 'Backdrop', g: 'backdrop', box: [580, 1020, 700, 330], a: stationTop('backdrop') },
+  { t: 'ผังห้องจัดเลี้ยง', box: HALL_FULL },
+];
+// seating list (รายชื่อโต๊ะจีน ปี 2569.pdf): table → "nickname/branch" pairs
+const TABLE_NAMES = Object.fromEntries(Object.entries({
+  1: 'สุ/สนญ.,ส้ม/สนญ.,ลี่/สนญ.,ดาว/สนญ.,บอส/ตลาดซุ้ย,ปาล์ม/สนามเป้า,บอม/สนญ.,นุช/สนญ.',
+  2: 'แต้ว/สนญ.,น้ำ/สนญ.,นิ้ง/สนญ.,กัน/ตลาดซุ้ย,ฟาง/แก่งหางแมว,ปิ่น/แก่งหางแมว,ขวัญ/บ่อไร่,นุ่น/บ่อไร่',
+  3: 'หญิง/จอหอ,แจม/จอหอ,นุ่น/จอหอ,กิ่ง/พิมาย,ปลา/พิมาย,เบนซ์/พิมาย,เอ้/บางคล้า,อ้อม/บางคล้า',
+  4: 'ดรีม/ปากช่อง,โบว์/ปากช่อง,แขก/ปากช่อง,โฟม/โนนสูง,ต่าย/โนนสูง,จ๋อม/ครบุรี,เปิ้ล/ด่านขุนทด,แต/ด่านขุนทด',
+  5: 'เหมียว/มิตรภาพ,ถิง/มิตรภาพ,นิ้ง/มิตรภาพ,ดาว/สีคิ้ว,เกด/สีคิ้ว,บุ๋ม/ปักธงชัย,เบ็นซ์/ปักธงชัย,กาญ/ปักธงชัย',
+  6: 'นุ๊ก/ฉะเชิงเทรา,แม็ก/โรงโป๊ะ,บดิน/อรัญ,กอล์ฟ/อรัญ,แจ๊บ/ศรีราชา,หน่อง/บ้านฉาง,เฟรม/สัตหีบ,เน่ะ/แหลมงอบ',
+  7: 'มายด์/บ่อทอง,สนุ๊ก/บ่อทอง,เปีย/ชลบุรี,ครีม/ชลบุรี,บีม/ราชบุรี,บุ๊ก/ราชบุรี,เอก/ราชบุรี,แบงค์/ขลุง',
+  8: 'โจ/กำแพงแสน,สาว/กำแพงแสน,เบ้น/นครปฐม,หนิง/นครปฐม,ปลา/นครปฐม,ปลา/ห้วยพลู,แหวง/แม่บ้าน,หนึ่ง/แม่บ้าน',
+  9: 'อุ๊/สนามชัยเขต,โบว์/สนามชัยเขต,ยศ/สนามชัยเขต,เผือก/พนมสารคาม,โบว์/พนมสารคาม,หญิง/พนมสารคาม,ออย/ฉะเชิงเทรา,มุก/ฉะเชิงเทรา',
+  10: 'ดี้/เขาฉกรรจ์,นุช/เขาฉกรรจ์,เนย/เขาฉกรรจ์,นก/เมืองตราด,ต่าย/ประแสร์,บีม/ประแสร์,เตย/วังจันทร์,ชมพู่/เขาชะเมา',
+  11: 'พี่เก่ง/สนญ.,พี่นก/สนญ.,แนน/ขลุง,สาเก/ขลุง,เปิ้ล/พลิ้ว,ปอย/สนญ.,นัท/ท่าใหม่,ไข่/ท่าใหม่',
+  12: 'วิท/มาบตาพุด,พลอย/มาบตาพุด,เจน/มาบตาพุด,ขวัญ/สัตหีบ,เบียร์/โรงโป๊ะ,อุ้ย/แก่งหางแมว,ไก่/หนองมน,ต้อม/บ้านอำเภอ',
+  13: 'ตั๊ก/สระแก้ว,พลอย/สระแก้ว,แมน/สระแก้ว,วี/ประโคนชัย,อร/ประโคนชัย,น้ำส้ม/ประโคนชัย,ฉก.โย/ฉก.,นิว/บุรีรัมย์',
+  14: 'เอ๋/สนญ.,เอ้อ/สนญ.,เจี๊ยบ/สนญ.,หนูนา/สนญ.,วิว/สนญ.,เมย์/สนญ.,ฟิวส์/สนญ.,วาว/สนญ.',
+  15: 'โบว์/ทับช้าง,น้อง/สอยดาว,ชมพู่/สอยดาว,อ้อ/ทับไทร,แพร/ทับไทร,แอม/นายายอาม,แนน/นายายอาม,นุช/แหลมงอบ',
+  16: 'แจง/บุรีรัมย์,อ๋อง/บุรีรัมย์,ฟ่าง/ลำปลายมาศ,ไมค์/ลำปลายมาศ,เบ๊ค/ลำปลายมาศ,ทราย/นางรอง,มุกดา/หนองกี่,ปู้เป้/หนองกี่',
+  17: 'บอส/ตรอ.,บัติ/ตรอ.,แม็ก/ทั่วไป,พี่ตุ๋ม/ประกัน,พี่แพรว/พัฒนาหนี้,ฉก พล/ฉก.,ฉก ยา/ฉก.,เชหนุ่ย/ทั่วไป',
+  18: 'ฟ้า/แสนตุ้ง,แอม/แสนตุ้ง,ทิพย์/สัตหีบ,โบว์/ตราด,มิ้น/ตราด,นก/คลองใหญ่,พี่เอ/คลองใหญ่,พี่หนู/หนองคล้า',
+  19: 'ปู/สามย่าน,หญิง/คลองหาด,เหมียว/วังน้ำเย็น,ป๊อป/คลองหาด,ศล/วังสมบูรณ์,ทราย/วังสมบูรณ์,น้อง/โคกอุดม,มล/มะขาม',
+  20: 'ตุ๊กตา/ปลวกแดง,ลิ/ปลวกแดง,แป๋ว/ปลวกแดง,ปาน/บ้านค่าย,ชาติ/ระยอง,อ้อม/ระยอง,ก้อย/นิคมพัฒนา,เจี๊ยบ/บ่อวิน',
+  21: 'เชน/บ้านเพ,รุ้ง/กบินทร์,หน่อย/บ้านเพ,สา/เนินพระ,อั้น/บ้านฉาง,ฟ้า/สนญ.,พั้น/สนญ.,มุกดา/สนญ.',
+  22: 'เตี่ยเปี๊ยก/สนญ.,ป้าติ๊ด/สนญ.,จิ๋ม/สนญ.,พี่โนช/สนญ.,ลุงน้อง/สนญ.',
+}).map(([t, s]) => [t, s.split(',').map(p => p.split('/'))]));
+const hallSec = $('[data-hall]'), hallSvg = $('.hall-map'), hallCap = $('.callout');
+hallSec.style.height = HALL.length * 70 + 'vh';
+(() => {
+  const VIP = n => n >= 23 && n <= 27;
+  const T = [];
+  [188, 375, 560, 742, 930].forEach((x, c) => [445, 597, 748, 900].forEach((y, r) => T.push([r * 5 + c + 1, x, y])));
+  T.push([21, 462, 1030], [22, 652, 1030]);
+  [192, 378, 560, 740, 922].forEach((x, i) => T.push([23 + i, x, 1205]));
+  const table = ([n, x, y]) => `<g class="${VIP(n) ? '' : 'tbl'}" data-n="${n}" transform="translate(${x} ${y})">` +
+    Array.from({ length: 10 }, (_, i) => `<rect x="-9" y="-66" width="18" height="16" rx="4" fill="#f2c27b" transform="rotate(${i * 36})"/>`).join('') +
+    `<circle r="46" fill="${VIP(n) ? '#e0262b' : '#fff'}"/><text y="12" text-anchor="middle" font-size="34" font-weight="600" fill="${VIP(n) ? '#fff' : '#2a1640'}">${n}</text></g>`;
+  const station = (g, { r: [x, y, w, h], t, c, icon }) => `<g class="mg" data-g="${g}">
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="${c}" fill-opacity=".85" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+      <g transform="translate(${x + w / 2} ${y + h / 2 - 4})">${icon}</g>
+      <text x="${x + w / 2}" y="${y + h - 22}" text-anchor="middle" font-size="27" font-weight="500" fill="#fff">${t}</text></g>`;
+  const colors = ['#ff8a2a', '#a066ff', '#ffc861', '#ff5fa2', '#5fd3ff'];
+  const dancers = Array.from({ length: 70 }, (_, i) => `<circle class="dancer" cx="${270 + Math.random() * 710}" cy="${200 + Math.random() * 150}" r="9" fill="${colors[i % 5]}" style="animation-delay:${-Math.random()}s"/>`).join('');
+  hallSvg.innerHTML = `<defs>
+      <linearGradient id="stg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1670"/><stop offset="1" stop-color="#7c3fe0"/></linearGradient>
+      <radialGradient id="flr"><stop offset="0" stop-color="#ff5fa2" stop-opacity=".45"/><stop offset="1" stop-color="#a066ff" stop-opacity=".12"/></radialGradient>
+    </defs>
+    <rect x="-150" y="12" width="1425" height="1270" rx="10" fill="#1a0f33" stroke="#6b5a90" stroke-width="8"/>
+    ${[281, 467, 651, 836].map(x => `<rect x="${x - 13}" y="380" width="26" height="898" fill="#ffffff0a"/>`).join('')}
+    <g class="mg"><rect x="240" y="180" width="770" height="190" rx="40" fill="url(#flr)"/>${dancers}</g>
+    <g class="mg">
+      ${[360, 470, 660, 770].map((x, i) => `<polygon class="beam" points="${x},20 ${x - 60},330 ${x + 60},330" fill="${colors[i % 4]}" opacity=".22" style="animation-delay:${-i * .7}s"/>`).join('')}
+      <rect x="300" y="18" width="530" height="150" rx="16" fill="url(#stg)" stroke="#c9a8ff" stroke-width="4"/>
+      <rect x="258" y="30" width="34" height="60" rx="6" fill="#0b0618"/><rect x="838" y="30" width="34" height="60" rx="6" fill="#0b0618"/>
+      <text x="565" y="122" text-anchor="middle" font-size="76" font-weight="600" fill="#fff">เวที</text>
+    </g>
+    <g class="mg" data-g="tables">${T.filter(t => !VIP(t[0])).map(table).join('')}</g>
+    <g class="mg"><rect x="140" y="1102" width="870" height="28" rx="4" fill="#c4122a" stroke="#ffc861" stroke-width="3"/></g>
+    <g class="mg" data-g="vip">${T.filter(t => VIP(t[0])).map(table).join('')}</g>
+    ${Object.entries(STATIONS).map(([g, st]) => station(g, st)).join('')}
+    <g class="mg" data-g="door">${[255, 868].map(x => `
+      <rect x="${x - 62}" y="1272" width="124" height="20" fill="#0f0820"/>
+      <path d="M${x - 60} 1282a60 60 0 0 0 60 60M${x + 60} 1282a60 60 0 0 1 -60 60" stroke="#c9a8ff" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
+      <rect x="${x - 95}" y="1350" width="190" height="40" rx="8" fill="#2b3f8f"/>
+      <text x="${x}" y="1379" text-anchor="middle" font-size="24" fill="#fff">ประตูเข้า-ออก</text>`).join('')}</g>`;
+})();
+const tblPop = $('.tbl-pop');
+$$('.tbl', hallSvg).forEach(g => g.addEventListener('click', () => {
+  const n = g.dataset.n, names = TABLE_NAMES[n] || [];
+  $('b', tblPop).innerHTML = `โต๊ะ ${n}<small>${names.length} คน</small>`;
+  $('ol', tblPop).innerHTML = names.map(([name, branch]) => `<li>${name}<span>${branch}</span></li>`).join('');
+  tblPop.classList.add('open');
+}));
+tblPop.addEventListener('click', e => e.target === tblPop && tblPop.classList.remove('open'));
+let hallStep = -1;
+// grow a focus box to the map's on-screen shape, so zooming also fills tall phone screens
+function fitBox([x, y, w, h]) {
+  const el = hallSvg.getBoundingClientRect(), A = el.width / el.height || 1;
+  const W = w / h < A ? h * A : w, H = w / h < A ? h : w / A;
+  const [fx, fy, fw, fh] = HALL_FULL;
+  const keepIn = (v, size, from, full) => size >= full ? from + (full - size) / 2 : Math.min(from + full - size, Math.max(from, v));
+  return [keepIn(x + (w - W) / 2, W, fx, fw), keepIn(y + (h - H) / 2, H, fy, fh), W, H];
+}
+function hallTick() {
+  const r = hallSec.getBoundingClientRect(), n = HALL.length - 1;
+  const s = clamp(-r.top / (r.height - innerHeight)) * n, k = Math.min(n - 1, Math.floor(s));
+  const t = clamp((s - k - .35) / .5), e = t * t * (3 - 2 * t), a = fitBox(HALL[k].box), b = fitBox(HALL[k + 1].box);
+  hallSvg.setAttribute('viewBox', a.map((v, i) => (v + (b[i] - v) * e).toFixed(1)).join(' '));
+  const step = e > .5 ? k + 1 : k;
+  if (step !== hallStep) {
+    hallStep = step;
+    const h = HALL[step];
+    hallSvg.classList.toggle('focus', !!h.g);
+    $$('.mg', hallSvg).forEach(g => g.classList.toggle('on', g.dataset.g === h.g));
+    $('small', hallCap).textContent = `${step} / ${n - 1}`;
+    $('b', hallCap).textContent = h.t;
+    $('span', hallCap).textContent = h.s || '';
+    hallCap.classList.remove('pop'); void hallCap.offsetWidth; hallCap.classList.add('pop');
+  }
+  placeCallout(HALL[step].a);
+}
+// pin the callout's arrow to a map point; the viewBox moves every frame, so this does too
+function placeCallout(a) {
+  hallCap.classList.toggle('show', !!a);
+  if (!a) return;
+  const p = hallSvg.createSVGPoint(); [p.x, p.y] = a;
+  const s = p.matrixTransform(hallSvg.getScreenCTM()), box = hallCap.parentNode.getBoundingClientRect();
+  const x = s.x - box.left, y = s.y - box.top, w = hallCap.offsetWidth, h = hallCap.offsetHeight;
+  const left = Math.min(box.width - w - 8, Math.max(8, x - w / 2)), down = y - h - 22 < 60;
+  hallCap.classList.toggle('down', down);
+  hallCap.style.left = left + 'px';
+  hallCap.style.top = (down ? y + 18 : y - h - 18) + 'px';
+  hallCap.style.setProperty('--ax', x - left + 'px');
+}
+addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
+addEventListener('resize', onScroll);
+document.fonts.ready.then(onScroll);
+onScroll();
+
+/* ---------- reveal + count-up ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('in'); io.unobserve(e.target);
+  $$('[data-count]', e.target).forEach(n => {
+    const to = +n.dataset.count, t0 = performance.now();
+    const step = t => { const k = clamp((t - t0) / 1400); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}), { threshold: .2 });
+$$('.tl-item,.prize,.ft-card,.hotel-map,.newbies').forEach(el => io.observe(el));
+
+/* ---------- live status + countdown ---------- */
+const RANGE = { day: ['11:00', '14:30'], night: ['16:30', '23:00'] };
+function tick() {
+  const now = Date.now();
+  $$('.tl-item').forEach(li => {
+    const s = at(li.dataset.s), e = at(li.dataset.e);
+    const live = now >= s && now < e, past = now >= e;
+    li.classList.toggle('live', live); li.classList.toggle('past', past);
+    $('.st', li).textContent = live ? 'กำลังเกิดขึ้น' : past ? 'จบแล้ว' : '';
+  });
+  $$('[data-cd]').forEach(box => {
+    const [s, e] = RANGE[box.dataset.cd].map(at);
+    if (now >= e) { box.innerHTML = '<div class="state">จบแล้ว</div>'; return; }
+    if (now >= s) { box.innerHTML = '<div class="state">กำลังเกิดขึ้น</div>'; return; }
+    let d = Math.floor((s - now) / 1000);
+    const parts = [[Math.floor(d / 86400), 'วัน'], [Math.floor(d % 86400 / 3600), 'ชม.'], [Math.floor(d % 3600 / 60), 'นาที'], [d % 60, 'วิ']];
+    box.innerHTML = parts.map(([v, l]) => `<div><b>${String(v).padStart(2, '0')}</b><small>${l}</small></div>`).join('');
+  });
+}
+tick(); setInterval(tick, 1000);
+
+/* ---------- new staff ---------- */
+// [nickname, branch, photo in assets/nb] — same order as the Freshy profile cards (เลือกเบอร์)
+const NEWBIES = [
+  ['กานต์', 'ปักธงชัย', 38], ['อ้อม', 'ระยอง', 39], ['แพร', 'ทับไทร', 40], ['อั้น', 'บ้านฉาง', 41], ['ลิ', 'ปลวกแดง', 42], ['เจน', 'มาบตาพุด', 43],
+  ['เกต', 'สีคิ้ว', 44], ['เนย', 'เขาฉกรรจ์', 45], ['ปูเป้', 'นางรอง', 46], ['มุก', 'หนองกี่', 47], ['มุก', 'ฉะเชิงเทรา', 48], ['อุ๊', 'สนามชัยเขต', 49],
+  ['แป๋ว', 'ปลวกแดง', 50], ['สนุ๊ก', 'บ่อทอง', 51], ['นิ้ง', 'มิตรภาพ', 52], ['ปิ่น', 'แก่งหางแมว', 53], ['นุ่น', 'จอหอ', 54], ['ครีม', 'ชลบุรี', 55],
+  ['บอส', 'ตลาดซุ้ย', 57], ['เน๊ะ', 'แหลมงอบ', 58], ['เบ๊ค', 'ลำปลายมาศ', 59], ['กอล์ฟ', 'เมืองอรัญ', 60], ['แมน', 'สระแก้ว', 61], ['แม็ค', 'โรงโป๊ะ', 62],
+  ['ยศ', 'สนามชัยเขต', 63], ['ไข่', 'ท่าใหม่', 64],
+];
+$('.newbies').innerHTML = NEWBIES.map(([n, b, f], i) => `<figure class="nb" style="--i:${i}"><img class="zoomable" src="assets/nb/${f}.jpg" alt="" loading="lazy"><figcaption><b>น้อง${n}</b><span>${b}</span></figcaption></figure>`).join('');
+$('[data-newbie-count]').textContent = NEWBIES.length + ' คน';
+
+/* ---------- hotel map: drawn in the hotel plan's own pixel coordinates ---------- */
+(() => {
+  const GARDEN = '#3fa65a', POOL = '#1e9bd1', PLAIN = '#d3b48a';
+  const R = []; // [room, x, y, w, h, colour]
+  const col = (x, y0, ids, h, gap, c) => ids.forEach((id, i) => R.push([id, x, y0 + i * (h + gap), 40, h, c]));
+  const nums = (a, b) => Array.from({ length: Math.abs(a - b) + 1 }, (_, i) => String(a > b ? a - i : a + i));
+  col(400, 150, nums(716, 707), 20, 2.5, GARDEN);
+  col(400, 385, nums(610, 606), 38, 5, POOL);
+  col(600, 190, ['M5', 'M4'], 48, 4, PLAIN);
+  col(600, 300, nums(706, 701), 20, 2.5, GARDEN);
+  col(600, 442, nums(605, 601), 40, 8, POOL);
+  for (let i = 0; i < 7; i++) {
+    R.push(['A50' + (i + 1), 95 + i * 50, 755, 36, 60, PLAIN]);
+    R.push(['A5' + String(i + 8).padStart(2, '0'), 560 + i * 50, 755, 36, 60, PLAIN]);
+  }
+  const lmOf = c => c === GARDEN ? 'garden' : c === POOL ? 'pool' : '';
+  const room = ([id, x, y, w, h, c], i) => `<g class="room pick" data-room="${id}" data-lm="${lmOf(c)}" style="--i:${i}"><rect x="${x}" y="${y}" width="${w + 10}" height="${h}" rx="5" fill="${c}" stroke="#2a1640" stroke-opacity=".35" stroke-width="2"/>
+      <text x="${x + (w + 10) / 2}" y="${y + h / 2 + (h < 30 ? 5 : 6)}" text-anchor="middle" font-size="${id.length > 3 ? 13 : h < 30 ? 15 : 17}" font-weight="600" fill="${c === PLAIN ? '#5a3d1e' : '#fff'}">${id}</text></g>`;
+  const bld = (x, y, w, h, c, lines, fs = 20, attr = '', ink = '#fff') => `<g ${attr || 'class="pick"'}><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="${c}" stroke="#2a1640" stroke-opacity=".35" stroke-width="2.5"/>` +
+    lines.map((t, i) => `<text x="${x + w / 2}" y="${y + h / 2 + (i - (lines.length - 1) / 2) * fs * 1.25 + fs * .35}" text-anchor="middle" font-size="${fs}" font-weight="600" fill="${ink}">${t}</text>`).join('') + '</g>';
+  const trees = [[60, 190], [150, 240], [230, 390], [300, 520], [180, 120], [70, 330], [330, 100], [700, 330], [690, 520], [980, 600], [1460, 600], [1440, 760], [1000, 820], [40, 560]]
+    .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${22 + (x * y) % 18}" fill="#7cbf5a" stroke="#5a9c3e" stroke-width="3"/><circle cx="${x - 6}" cy="${y - 7}" r="${7 + (x * y) % 6}" fill="#9fd67a"/>`).join('');
+  const deco = [['pumpkin', 250, 640, 46], ['pumpkin', 1040, 650, 40], ['ghost', 1100, 420, 46], ['pumpkin', 1220, 790, 44], ['ghost', 150, 470, 40], ['pumpkin', 990, 230, 38]]
+    .map(([s, x, y, w]) => `<use href="#${s}" x="${x}" y="${y}" width="${w}" height="${w}"/>`).join('');
+  $('.hotel-map').innerHTML = `
+    <rect x="-2000" y="-2000" width="6000" height="6000" fill="#fbf1df"/>
+    <path d="M0 90H1100Q1300 140 1526 280V860H0z" fill="#f6e3c3"/>
+    <rect x="20" y="95" width="330" height="440" rx="26" fill="#cfe7a3"/>
+    <rect x="660" y="120" width="320" height="300" rx="30" fill="#cfe7a3"/>
+    <path d="M740 175q80-40 170 0t-20 80q-60 30-70-10t-70-10q-40-30-10-60z" fill="#8ad9f2" stroke="#3fb0d6" stroke-width="4"/>
+    <rect x="40" y="700" width="900" height="140" rx="26" fill="#cfe7a3"/>
+    <rect x="490" y="470" width="60" height="130" rx="14" fill="#8ad9f2" stroke="#3fb0d6" stroke-width="4"/>
+    ${trees}${deco}
+    <path d="M-2000 -40H1100Q1300 0 1526 140V280Q1300 140 1100 90H-2000z" fill="#3b2758"/>
+    <path d="M0 55H1100Q1290 95 1526 240" stroke="#ffb15c" stroke-width="5" stroke-dasharray="40 30" fill="none"/>
+    <text x="620" y="40" text-anchor="middle" font-size="28" font-weight="600" fill="#ffd79a">ถนนเฉลิมบูรพาชลทิต</text>
+    <path d="M-2000 880Q200 850 420 870T900 860T1526 870H3000V4000H-2000z" fill="#f6d9a0"/>
+    <path d="M-2000 920Q200 895 420 915T900 905T1526 915H3000V4000H-2000z" fill="#6cc8ec"/>
+    <path class="wave" d="M0 950q40-14 80 0t80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0 80 0" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>
+    ${bld(585, 100, 75, 80, '#b98a5e', ['ศาล'], 18)}
+    ${bld(488, 325, 72, 135, PLAIN, ['M1–M3'], 20, '', '#5a3d1e')}
+    ${bld(110, 605, 345, 80, '#ff7a1a', ['อาคารโรงแรม 4 ชั้น', 'ห้องดีลักซ์ · ห้องประชุมมารีน่า'], 21, 'class="pick tower" data-lm="deluxe"')}
+    ${bld(478, 605, 92, 85, PLAIN, ['ระเบียง', 'ทราย'], 18, '', '#5a3d1e')}
+    <g class="pick" data-lm="lunch breakfast"><rect x="490" y="740" width="60" height="90" rx="12" fill="#e2456f" stroke="#2a1640" stroke-opacity=".35" stroke-width="2.5"/><text x="520" y="790" text-anchor="middle" font-size="15" font-weight="600" fill="#fff">อาหาร</text>
+      <rect x="400" y="836" width="240" height="40" rx="20" fill="#fff" stroke="#e2456f" stroke-width="3"/>
+      <text x="520" y="863" text-anchor="middle" font-size="19" font-weight="600" fill="#2a1640">ห้องอาหารเพลินทะเล</text></g>
+    <g class="pick" data-lm="venue"><rect class="venue-ring" x="725" y="410" width="230" height="190" rx="22" fill="none" stroke="#ffb627" stroke-width="6"/>
+      <rect x="735" y="420" width="210" height="170" rx="18" fill="#6b2fb3" stroke="#ffb627" stroke-width="5"/>
+      <text x="840" y="482" text-anchor="middle" font-size="25" font-weight="600" fill="#fff">ห้องประชุมสายลม</text>
+      <text x="840" y="540" text-anchor="middle" font-size="22" font-weight="600" fill="#ffd79a">สถานที่จัดงาน</text></g>
+    <rect x="978" y="315" width="44" height="175" rx="10" fill="#7d8fe0"/><text x="1000" y="410" text-anchor="middle" font-size="26" font-weight="600" fill="#fff">P</text>
+    <rect x="1300" y="330" width="170" height="300" rx="20" fill="#e6d6bc"/><text x="1385" y="490" text-anchor="middle" font-size="40" font-weight="600" fill="#7d8fe0">P</text>
+    <text x="1175" y="270" text-anchor="middle" font-size="22" font-weight="600" fill="#2a1640">OUT</text>
+    <text x="1290" y="270" text-anchor="middle" font-size="22" font-weight="600" fill="#2a1640">IN</text>
+    ${R.map(room).join('')}`;
+})();
+
+/* ---------- 4-floor building plan (แผนผังห้องพักตัวโรงแรม): every room faces the sea ---------- */
+(() => {
+  const C = []; // [row, colStart, colEnd, class, html, room]
+  const cell = (r, row, col) => C.push([row, col, col + 1, '', r, r]);
+  const run = (from, n, col, row) => { for (let i = 0; i < n; i++) cell(String(from + i), row, col + i); };
+  [4, 3, 2, 1].forEach((f, k) => {
+    const row = k + 1;
+    C.push([row, 1, 2, 'fl', 'ชั้น ' + f]);
+    run(f * 100 + 1, 4, 2, row);
+    if (f >= 3) run(f * 100 + 5, 11, 7, row);
+    if (f === 2) { cell('205', row, 7); C.push([row, 8, 13, 'hall', 'ห้องประชุม<br>มารีน่า']); run(206, 5, 13, row); }
+    if (f === 1) { run(105, 2, 7, row); C.push([row, 9, 13, 'lobby', 'LOBBY']); run(107, 5, 13, row); }
+  });
+  cell('F1', 5, 13); cell('F2', 5, 14);
+  const div = (cls, html, room, area) => `<div class="${cls}"${room ? ` data-room="${room}"` : ''} style="grid-area:${area}">${html}</div>`;
+  const wide = C.map(([r, a, b, cls, html, room]) => div(cls, html, room, `${r}/${a}/${r + 1}/${b}`)).join('');
+  $('.tower-plan').innerHTML = `<div class="tp-in"><div class="tp-sea">ทะเล</div><div class="tp-grid">${wide}</div></div>`;
+})();
+
+/* ---------- landmark menu + zoom: the map zooms to whatever is picked, everything else turns grey ---------- */
+const hotelView = $('.hotel-view'), hotelMap = $('.hotel-map'), zoomBtn = $('.zoom-btn'), found = $('.found');
+const FULL = [0, 60, 1526, 900];
+const LM = {
+  all: FULL, venue: [680, 360, 330, 290], lunch: [390, 700, 280, 200], breakfast: [390, 700, 280, 200],
+  garden: [350, 110, 360, 360], pool: [350, 350, 360, 380], deluxe: null,
+};
+let vb = FULL.slice(), target = FULL, anim = 0, focusBox = null;
+// stretch a box to the map's on-screen shape, then glide the viewBox to it
+function zoomTo(box) {
+  target = box;
+  zoomBtn.classList.toggle('out', box === FULL);
+  let [x, y, w, h] = box;
+  const r = hotelMap.clientWidth / hotelMap.clientHeight || 1.5;
+  if (w / h < r) { x -= (h * r - w) / 2; w = h * r; } else { y -= (w / r - h) / 2; h = w / r; }
+  const from = vb.slice(), to = [x, y, w, h], t0 = performance.now();
+  cancelAnimationFrame(anim);
+  const step = now => {
+    const k = Math.min(1, (now - t0) / 650), e = 1 - (1 - k) ** 3;
+    vb = from.map((v, i) => v + (to[i] - v) * e);
+    hotelMap.setAttribute('viewBox', vb.join(' '));
+    if (k < 1) anim = requestAnimationFrame(step);
+  };
+  anim = requestAnimationFrame(step);
+}
+addEventListener('resize', () => zoomTo(target));
+function setView(v) { hotelView.dataset.view = v; }
+function clearMarks() { $$('.lit,.hit', hotelView).forEach(e => e.classList.remove('lit', 'hit')); }
+function pickLm(k) {
+  $$('.lm button').forEach(b => b.classList.toggle('on', b.dataset.lm === k));
+  clearMarks();
+  hotelView.classList.toggle('focus', k !== 'all' && k !== 'deluxe');
+  $$(`.hotel-map [data-lm~="${k}"]`).forEach(e => e.classList.add('lit'));
+  setView(k === 'deluxe' ? 'tower' : 'resort');
+  found.innerHTML = '';
+  focusBox = k === 'all' ? null : LM[k];
+  if (LM[k]) zoomTo(LM[k]);
+  zoomBtn.classList.toggle('show', !!focusBox);
+}
+$$('.lm button').forEach(b => b.addEventListener('click', () => pickLm(b.dataset.lm)));
+$('.hotel-map .tower').addEventListener('click', () => pickLm('deluxe'));
+hotelMap.setAttribute('viewBox', FULL.join(' '));
+// zoom out to see the whole resort without losing the grey-out, then back in
+zoomBtn.addEventListener('click', () => zoomTo(target === FULL ? focusBox : FULL));
+
+/* ---------- who sleeps where + colour (รายชื่อพนักงานเข้าร่วมงาน 2569.xlsx) ---------- */
+// [nickname, branch, colour o/p/k(กรรมการ), room]
+const PEOPLE = [["บอม","ตึกช้าง","k","207"],["ฟิว","สนญ.","p","207"],["แต้ว","ตึกช้าง","o","208"],["บอส","ตลาดซุ้ย","k","208"],["วี","ประโคนชัย","p","209"],["โย","ฉก.","p","209"],["ตุ๊กตา","ปลวกแดง","o","210"],["ปาน","บ้านค่าย","","210"],["วิทย์","มาบตาพุด","o","302"],["ขวัญ","สัตหีบ","o","302"],["เปี๊ยก","สนญ.","o","304"],["ติ๊ด","สนญ.","o","304"],["คณะวิทยากร","","","308"],["คณะวิทยากร","","","309"],["นิว","บุรีรัมย์","p","701"],["ทราย","นางรอง","p","701"],["เบ็ค","ลำปลายมาศ","p","701"],["ไมค์","ลำปลายมาศ","p","701"],["อร","ประโคนชัย","p","702"],["ส้ม","ประโคนชัย","p","702"],["มุก","หนองกี่","p","702"],["ปูเป้","นางรอง","p","702"],["ฟ้า","สนญ.","p","703"],["พั้น","สนญ.","p","703"],["จิ๋ม","สนญ.","p","703"],["มุกดา","สนญ.","p","703"],["เจี๊ยบ","บ่อวิน","o","704"],["ก้อย","นิคมพัฒนา","o","704"],["แป๋ว","ปลวกแดง","o","704"],["ลิ","ปลวกแดง","o","704"],["กระแต","ด่านขุนทด","p","705"],["เปิ้ล","ด่านขุนทด","p","705"],["ดาว","สีคิ้ว","p","705"],["เกต","สีคิ้ว","p","705"],["ป๊อป","คลองหาด","p","706"],["หญิง","คลองหาด","p","706"],["เหมียว","วังน้ำเย็น","p","706"],["ปู","สามย่าน","o","706"],["น้อง","สอยดาว","o","707"],["ชมพู่","สอยดาว","o","707"],["แพร","ทับไทร","o","707"],["อ้อ","ทับไทร","o","707"],["แนน","ขลุง","o","708"],["สาเก","ขลุง","o","708"],["เปิ้ล","พลิ้ว","o","708"],["นก","สนญ.","o","708"],["สุ","สนญ.","k","601"],["ดาว","สนญ.","o","601"],["นุช","สนญ.","o","601"],["ลี่","สนญ.","k","601"],["นิ้ง","สนญ.","o","601"],["ส้ม","สนญ.","k","601"],["ปลา","พิมาย","p","602"],["เบนซ์","พิมาย","p","602"],["กิ่ง","พิมาย","p","602"],["แจง","บุรีรัมย์","p","602"],["อ๋อง","บุรีรัมย์","p","602"],["ข้าวฟาง","ลำปลายมาศ","p","602"],["โฟม","โนนสูง","p","603"],["ต่าย","โนนสูง","p","603"],["จ๋อม","ครบุรี","p","603"],["แขก","ปากช่อง","p","603"],["ดรีม","ปากช่อง","p","603"],["โบว์","ปากช่อง","p","603"],["เหมียว","มิตรภาพ","p","604"],["ถิงถิง","มิตรภาพ","p","604"],["นิ้ง","มิตรภาพ","p","604"],["บุ๋ม","ปักธงชัย","p","604"],["รถเบ็นซ์","ปักธงชัย","p","604"],["กานต์","ปักธงชัย","p","604"],["บอล","เมืองอรัญ","p","605"],["กอล์ฟ","เมืองอรัญ","p","605"],["แจ๊บ","ศรีราชา","p","605"],["หน่อง","บ้านฉาง","o","605"],["แบงค์","ขลุง","o","605"],["นุ๊ก","ฉะเชิงเทรา","p","605"],["นุ่น","บ่อไร่","o","606"],["ขวัญ","บ่อไร่","o","606"],["มล","มะขาม","o","606"],["โบว์","ตราด","o","606"],["มิ้นทร์","ตราด","o","606"],["นุช","แหลมงอบ","o","606"],["เอ๋เอ้อ","สนญ.","p","607"],["วิว","สนญ.","p","607"],["เมย์","สนญ.","p","607"],["วาว","สนญ.","p","607"],["เจี๊ยบ","สนญ.","p","607"],["หนูนา","สนญ.","p","607"],["โบว์","สนามชัยเขต","p","608"],["ยศ","สนามชัยเขต","p","608"],["อุ๊","สนามชัยเขต","p","608"],["โบว์","พนมสารคาม","p","608"],["หญิง","พนมสารคาม","p","608"],["เผือก","พนมสารคาม","p","608"],["ปลา","ห้วยพูล","o","609"],["ปลา","นครปฐม","o","609"],["หนิง","นครปฐม","o","609"],["เบ็น","นครปฐม","o","609"],["สาว","กำแพงแสน","o","609"],["โจ","กำแพงแสน","o","609"],["มุก","ฉะเชิงเทรา","","610"],["ออย","ฉะเชิงเทรา","p","610"],["บีม","ประแสร์","o","610"],["ต่าย","ประแสร์","o","610"],["พลอย","มาบตาพุด","o","610"],["เจน","มาบตาพุด","o","610"],["ปาล์ม","สนามเป้า","k","101"],["บัติ","ทั่วไป","p","101"],["บอส","ตรอ.","o","101"],["กันต์","ตลาดซุ้ย","o","102"],["น้ำ","สนญ.","o","102"],["ฟาง","แก่งหางแมว","o","102"],["หญิง","จอหอ","p","103"],["แจม","จอหอ","p","103"],["นุ่น","จอหอ","p","103"],["ฟ้า","แสนตุ้ง","o","104"],["แอมป์","แสนตุ้ง","o","104"],["ทิพย์","สัตหีบ","o","104"],["แนน","นายายอาม","o","105"],["แอม","นายายอาม","o","105"],["โบว์","ทับช้าง","o","105"],["สา","เนินพระ","o","106"],["อ้อม","ระยอง","o","106"],["อั้น","บ้านฉาง","o","106"],["ตุ๋ม","สนญ.","o","107"],["แพรว","สนญ.","o","107"],["เอก","ราชบุรี","o","108"],["บุ๊ค","ราชบุรี","o","108"],["เฟรม","สัตหีบ","o","108"],["ชาติ","ระยอง","o","109"],["พล","ฉก.","p","109"],["ยา","ฉก.","p","109"],["หนุ๋ย","ทั่วไป","p","110"],["ป๋าน้อง","ทั่วไป","p","110"],["แม็ก","ทั่วไป","p","110"],["มาโนช","สนญ.","o","111"],["แมน","สระแก้ว","p","111"],["แม็ค","โรงโป๊ะ","o","111"],["บีม","ราชบุรี","o","F1"],["มายด์","บ่อทอง","o","F1"],["สนุ๊ก","บ่อทอง","o","F1"],["ตั๊ก","สระแก้ว","p","F2"],["พลอย","สระแก้ว","p","F2"],["ไก่","หนองมน","p","F2"],["ทราย","วังสมบูรณ์","p","201"],["ศล","วังสมบูรณ์","p","201"],["น้อง","โคกอุดม","p","201"],["เอ้","บางคล้า","p","202"],["อ้อม","บางคล้า","p","202"],["เบียร์","โรงโป๊ะ","o","202"],["ต้อม","บ้านอำเภอ","p","203"],["หน่อย","บ้านเพ","o","203"],["รุ้ง","กบินทร์บุรี","p","203"],["อุ้ย","แก่งหางแมว","o","204"],["เก่ง","สนญ.","p","204"],["เชน","บ้านเพ","o","204"],["หนึ่ง","สนญ.","o","205"],["แหวง","สนญ.","p","205"],["ปอย","สนญ.","o","205"],["ดี้","เขาฉกรรจ์","p","206"],["เนย","เขาฉกรรจ์","p","206"],["นุช","เขาฉกรรจ์","p","206"],["ผู้บริหาร","","","315/415"],["ผู้บริหาร","","","401/402"],["ผู้บริหาร","","","403/404"],["ผู้บริหาร","","","406"],["ผู้บริหาร","","","408"],["ผู้บริหาร","","","409/410"],["ผู้บริหาร","","","411/412/413"],["ผู้บริหาร","","","A505"],["ผู้บริหาร","","","414"],["นัท","ท่าใหม่","o",""],["ไข่","ท่าใหม่","o",""],["ปิ่น","แก่งหางแมว","o",""],["เอ","คลองใหญ่","o",""],["เน๊ะ","แหลมงอบ","o",""],["เปีย","ชลบุรี","o",""],["ครีม","ชลบุรี","o",""],["นก","คลองใหญ่","o",""],["นก","เมืองตราด","o",""],["หนู","แสนตุ้ง","o",""],["ชมพู่","เขาชะเมา","o",""],["เตย","เขาชะเมา","o",""],["เก้","บ้านค่าย","o",""],["หมวย","สนญ.","k",""]];
+// a room value can be several rooms ("401/402"); 1xx–4xx and F1/F2 are in the 4-floor building
+function showRoom(r) {
+  $$('.lm button').forEach(b => b.classList.remove('on'));
+  clearMarks();
+  hotelView.classList.add('focus');
+  $$(`[data-room="${r}"]`, hotelView).forEach(g => g.classList.add('hit'));
+  const inTower = /^([1-4]\d\d|F\d)$/.test(r);
+  setView(inTower ? 'tower' : 'resort');
+  const rect = $('.hotel-map .hit rect');
+  if (rect) {
+    const [x, y, w, h] = ['x', 'y', 'width', 'height'].map(a => +rect.getAttribute(a)), s = hotelMap.clientWidth < 500 ? .6 : 1;
+    focusBox = [x + w / 2 - 220 * s, y + h / 2 - 180 * s, 440 * s, 360 * s];
+    zoomTo(focusBox);
+  }
+  zoomBtn.classList.toggle('show', !inTower);
+  // the whole 4th floor and 315 are executive rooms, shown without names
+  const people = /^(4\d\d|315)$/.test(r) ? [['ผู้บริหาร', '', '']] : PEOPLE.filter(p => p[3].split('/').includes(r));
+  found.innerHTML = `<div class="rp"><div class="rp-h"><b>ห้อง ${r}</b>${people.length && people.every(p => p[1]) ? `<span>${people.length} คน</span>` : ''}</div>` +
+    (people.length ? `<ul>${people.map(([n, b, c]) => `<li class="${c}"><i></i><div>${n}${b ? `<small>${b}</small>` : ''}</div></li>`).join('')}</ul>` : '<div class="rp-none">ไม่มีรายชื่อในห้องนี้</div>') + '</div>';
+}
+$$('[data-room]', hotelView).forEach(g => g.addEventListener('click', e => { e.stopPropagation(); showRoom(g.dataset.room); }));
+/* ---------- photobooth lightbox ---------- */
+const lb = $('.lightbox');
+$$('.fan img, .zoomable').forEach(img => img.addEventListener('click', () => { $('img', lb).src = img.src; lb.classList.add('open'); }));
+lb.addEventListener('click', () => lb.classList.remove('open'));
+addEventListener('keydown', e => e.key === 'Escape' && lb.classList.remove('open'));
+
+/* ---------- extras: bats + cursor glow ---------- */
+function bat() {
+  if (document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const b = document.createElement('div'); b.className = 'bat';
+  const y = Math.random() * innerHeight * .6;
+  b.style.setProperty('--y0', y + 'px'); b.style.setProperty('--y1', (y + (Math.random() - .5) * 300) + 'px');
+  b.style.width = (36 + Math.random() * 40) + 'px';
+  b.innerHTML = '<svg viewBox="0 0 100 50"><use href="#bat"/></svg>';
+  document.body.appendChild(b); setTimeout(() => b.remove(), 9500);
+}
+setInterval(() => root.dataset.mode === 'night' && bat(), 3500);
+addEventListener('pointermove', e => { root.style.setProperty('--mx', e.clientX + 'px'); root.style.setProperty('--my', e.clientY + 'px'); });
+</script>
+</body>
+</html>
