@@ -67,12 +67,159 @@ body:not(.is-idle) .point.r{display:none}
 body.is-idle .qr{--s:26vh;right:50%;bottom:5vh;translate:50% 0}
 body.is-idle #count{display:none}
 body.is-idle .idle{margin-bottom:26vh}
+.idle .date{display:none;font:500 3vw "Mitr";color:#fff;margin-top:3vh;text-shadow:0 0 20px #a066ff}
+body.mode-pause .idle{margin-bottom:0}
+body.mode-pause .idle .date{display:block}
+body.mode-pause .qr{display:none}
 .fs{position:fixed;z-index:10;left:3vh;top:3vh;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);color:var(--orange);cursor:inherit;transition:opacity .4s,transform .2s}
 .fs:hover{transform:scale(1.08);border-color:var(--orange)}
 .fs svg{width:28px;height:28px}
 .fs .out,:fullscreen .fs .in{display:none}
 :fullscreen .fs .out{display:block}
 body.still .fs{opacity:0;pointer-events:none}
+
+/* ---------- vote mode: wooden sign, analog 1-minute clock, floating votes ---------- */
+.vote{--sy:20vh;position:fixed;inset:0;z-index:5;overflow:hidden;pointer-events:none}
+.vbg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,#3a1670,#0f0820 70%)}
+.sign{position:absolute;left:50%;top:0;padding-top:8vh;translate:-50% 0;transform-origin:50% 0;animation:swing 4.5s ease-in-out infinite}
+@keyframes swing{0%,100%{rotate:-2deg}50%{rotate:2deg}}
+.rope{position:absolute;top:-1vh;width:.8vh;height:10.5vh;border-radius:9px;background:repeating-linear-gradient(35deg,#d9b27a 0 .7vh,#8a6436 .7vh 1.4vh)}
+.rope.l{left:16%}.rope.r{right:16%}
+.plank{position:relative;padding:2.4vh 7vh 2.8vh;border-radius:1.4vh;font:600 7.5vh/1.2 "Mitr";color:#fbe3b8;white-space:nowrap;text-shadow:0 .3vh 0 #4a2610,0 -.15vh 0 #ffffff30;background:repeating-linear-gradient(180deg,#0000 0 1.9vh,#3a1d0826 1.9vh 2.1vh),linear-gradient(100deg,#8b5229,#b0703a 40%,#8b5229 70%,#a5652f);box-shadow:inset 0 0 0 .5vh #5a3014,inset 0 1vh 2vh #ffffff1f,inset 0 -1vh 2vh #0004,0 2vh 4vh #000b}
+.plank::before,.plank::after{content:"";position:absolute;top:1.2vh;width:1.6vh;height:1.6vh;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8e0d0,#6b6358);box-shadow:0 .2vh .3vh #0008}
+.plank::before{left:calc(16% - .4vh)}.plank::after{right:calc(16% - .4vh)}
+
+.flip{--h:9vh;--bx:#1f1238;position:absolute;left:50%;bottom:3vh;translate:-50% 0;display:flex;gap:2vh;transition:opacity .6s}
+.flip .u{display:grid;justify-items:center;gap:.6vh;padding:1.6vh 2vh 1.2vh;border-radius:2.4vh;background:var(--bx);border:1px solid var(--line);box-shadow:0 2vh 4vh #000a}
+.flip small{font:400 2.2vh "Mitr";color:var(--muted)}
+.fc{position:relative;height:var(--h);width:calc(var(--h)*1.25);perspective:50vh}
+.fc .h{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:var(--bx);backface-visibility:hidden}
+.fc .t{top:0;transform-origin:50% 100%}
+.fc .b{bottom:0;transform-origin:50% 0}
+.fc .h span{display:block;height:var(--h);line-height:var(--h);text-align:center;font:600 calc(var(--h)*.78) "Mitr";font-variant-numeric:tabular-nums;color:#fff;transition:color .4s}
+.fc .b span{margin-top:calc(var(--h)*-.5)}
+.fc .ft,.fc .fb{z-index:2;visibility:hidden}
+.fc.go .ft{visibility:visible;animation:foldT .25s ease-in forwards}
+.fc.go .fb{visibility:visible;animation:foldB .25s .25s ease-out both}
+@keyframes foldT{from{transform:rotateX(0)}to{transform:rotateX(-90deg)}}
+@keyframes foldB{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+body.vote-hurry .fc .h span{color:#ff3b4e}
+body.vote-shut .flip{opacity:.35}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{translate:0 0}20%{translate:-1.2vh .8vh}40%{translate:1vh -1vh}60%{translate:-.8vh .5vh}80%{translate:.4vh -.3vh}}
+
+.av{position:relative;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#a066ff,#5a2fb0);font-family:"Mitr";font-weight:600;color:#fff}
+.av.odd{background:linear-gradient(135deg,var(--orange),#ff5e00)}
+body.mode-vote.vote-shut .qr{opacity:0;pointer-events:none}
+
+.floats{position:fixed;inset:0;z-index:7;overflow:hidden;pointer-events:none}
+.fl{position:absolute;bottom:0;left:var(--x);display:flex;align-items:center;gap:1.2vh;padding:.8vh 2.6vh .8vh .8vh;border-radius:99px;background:#2a1052cc;border:1.5px solid #ffffff66;font:600 3.6vh "Mitr";color:#fff;box-shadow:0 0 3vh #a066ff88;animation:floatup 6s ease-in both}
+.fl .av{width:8vh;height:8vh;font-size:4.6vh}
+@keyframes floatup{0%{transform:translate(0,100%) scale(.5);opacity:0}10%{transform:translate(0,-10vh) scale(1);opacity:1}35%{transform:translate(3vw,-40vh)}65%{transform:translate(-2vw,-75vh);opacity:1}100%{transform:translate(2vw,-115vh);opacity:0}}
+.fl.boss{z-index:2;gap:2vh;padding:1.4vh 5vh 1.4vh 1.4vh;background:linear-gradient(135deg,#ffe08a,#ffb347);border:0;color:#1a0d33;font-size:8vh;line-height:1;box-shadow:0 0 0 .7vh #fff9,0 0 12vh #ffc861;animation-duration:10s}
+.fl.boss .av{width:14vh;height:14vh;font-size:7vh;box-shadow:0 0 0 .5vh #fff}
+.fl.boss svg{position:absolute;left:3.5vh;top:-6vh;width:9vh;fill:#ffc861;stroke:#1a0d33;stroke-width:1.2;animation:bob 1.2s ease-in-out infinite}
+
+/* ---------- vote closed: caution tapes + warning sign rise up ---------- */
+.closed{position:fixed;inset:0;z-index:8;display:grid;place-items:center;overflow:hidden;pointer-events:none}
+body:not(.mode-vote) .closed,body:not(.vote-shut) .closed{display:none}
+.closed::before{content:"";position:absolute;inset:0;background:#0b0618b3;animation:fadein .5s both}
+@keyframes fadein{from{opacity:0}}
+.tape{position:absolute;left:0;right:0;height:10vh;display:flex;align-items:center;overflow:hidden;background:#ffcc00;box-shadow:0 1.5vh 3vh #000b;animation:tapeup .8s cubic-bezier(.2,1.25,.4,1) both}
+.tape::before,.tape::after{content:"";position:absolute;left:0;right:0;height:1.6vh;background:repeating-linear-gradient(-45deg,#111 0 1.6vh,#ffcc00 1.6vh 3.2vh)}
+.tape::before{top:0}.tape::after{bottom:0}
+.tape span{flex:none;white-space:pre;font:600 4.6vh "Mitr";color:#111;animation:marq 40s linear infinite}
+.tape.t1{top:13vh}
+.tape.t2{bottom:11vh;animation-delay:.12s}
+.tape.t2 span{animation-direction:reverse}
+@keyframes tapeup{from{transform:translateY(100vh)}}
+@keyframes marq{to{transform:translateX(-50%)}}
+.warn{position:relative;display:flex;flex-direction:column;align-items:center;gap:1.5vh;padding:4vh 9vh 4.5vh;border-radius:3vh;background:#ffcc00;border:1.4vh solid #111;box-shadow:0 0 0 1.2vh #ffcc00,0 0 10vh #ffcc0099,0 3vh 8vh #000c;animation:tapeup 1s cubic-bezier(.2,1.2,.4,1) .25s both,glow 1.6s ease-in-out 1.3s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 1.2vh #ffcc00,0 0 18vh #ffcc00,0 3vh 8vh #000c}}
+.warn svg{width:16vh}
+.warn b{font:600 14vh/1.1 "Mitr";color:#111;white-space:nowrap}
+.point b[data-m="vote"]{display:none}
+body.mode-vote .point b[data-m="vote"]{display:block}
+body.mode-vote .point,body.mode-vote #count{display:none}
+body.mode-vote .qr{--s:42vh;right:50%;bottom:24vh;translate:50% 0}
+
+/* ---------- award: red carpet, winners walk out ---------- */
+.award{--sy:24vh;position:fixed;inset:0;z-index:9;overflow:hidden;background:radial-gradient(ellipse at 50% 0,#3a1670,#0f0820 70%);animation:fadein .8s both}
+.spots i{position:absolute;top:-6vh;left:var(--x);width:46vmax;height:125vh;translate:-50% 0;transform-origin:50% 0;rotate:var(--r0);background:linear-gradient(#ff9a3af0,#ff7a1a66 60%,#ff7a1a00);clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);mix-blend-mode:screen;filter:blur(5px);animation:spot 3.2s ease-in-out infinite alternate}
+.spots i:nth-child(1){--x:6%;--r0:-28deg;--r1:-6deg}
+.spots i:nth-child(2){--x:94%;--r0:28deg;--r1:6deg;animation-delay:-1.6s}
+.spots i:nth-child(3){--x:50%;--r0:-8deg;--r1:8deg;animation-duration:2.4s;opacity:.7}
+.award.gold .spots i:nth-child(1){--r0:-52deg;--r1:-46deg;background:linear-gradient(#ffe08af0,#ffc86166 60%,#ffc86100)}
+.award.gold .spots i:nth-child(2){--r0:52deg;--r1:46deg;background:linear-gradient(#ffe08af0,#ffc86166 60%,#ffc86100)}
+.award.gold .spots i:nth-child(3){--r0:-3deg;--r1:3deg}
+@keyframes spot{to{rotate:var(--r1)}}
+.a-head{position:absolute;top:6vh;left:0;right:0;z-index:2;text-align:center;font:600 8vh/1.1 "Mitr";color:#fff;text-shadow:0 0 4vh #a066ff}
+.lineup{position:absolute;left:50%;top:var(--sy);z-index:2;display:flex;justify-content:center;align-items:center;gap:1.4vh;width:100vh;height:10vh;translate:-50% 0;border-radius:1.6vh 1.6vh .5vh .5vh;background:linear-gradient(#5a2a9a,#2a1050);border-top:.5vh solid var(--gold);box-shadow:0 0 8vh #ff8a2a55}
+.runway{position:absolute;left:50%;top:calc(var(--sy) + 10vh);bottom:0;width:150vh;translate:-50% 0;filter:drop-shadow(0 0 4vh #c4122a99)}
+.runway .rug{position:absolute;inset:0;clip-path:polygon(34% 0,66% 0,100% 100%,0 100%);background:linear-gradient(90deg,#ffc861 0 1.2%,#0000 1.2% 98.8%,#ffc861 98.8%),repeating-linear-gradient(0deg,#c4122a 0 6vh,#b10f25 6vh 12vh)}
+.gh{position:relative;container-type:inline-size}
+.gh svg{display:block;width:100%;overflow:visible}
+.gh b{position:absolute;left:50%;top:78%;translate:-50% -50%;display:grid;place-items:center;width:62%;aspect-ratio:1;border-radius:50%;background:var(--orange);color:#1a0d2e;font:600 32cqw "Mitr"}
+.gslot{width:7vh;filter:drop-shadow(0 0 1vh #ff8a2a);transition:opacity .6s}
+.gslot.gone{opacity:.2;filter:none}
+.champ{position:absolute;z-index:3;left:var(--x);top:var(--y);width:var(--w);translate:-50% -50%;filter:drop-shadow(0 0 3vh #ff8a2a);transition:left var(--t) ease-in-out,top var(--t) ease-in-out,width var(--t) ease-in-out}
+.champ.walk .g{animation:waddle .5s ease-in-out infinite alternate}
+@keyframes waddle{from{rotate:-6deg;translate:0 -.5vh}to{rotate:6deg;translate:0 .5vh}}
+.champ.done .g{animation:bob 2.4s ease-in-out infinite}
+.champ .pl{position:absolute;left:50%;top:104%;translate:-50% 0;padding:.6vh 2.6vh;border-radius:99px;background:#fff;color:#1a0d33;font:600 3.4vh "Mitr";white-space:nowrap;opacity:0;transition:opacity .6s}
+.champ.done .pl{opacity:1}
+.champ .crown,.champ .rays,.champ .rib{display:none}
+.champ.gold{filter:drop-shadow(0 0 5vh #ffc861)}
+.champ.gold .pl{background:linear-gradient(135deg,#ffe08a,#ffb347);font-size:4.4vh}
+.champ.gold .crown{display:block;position:absolute;left:50%;top:-16%;width:58%;translate:-50% 0;fill:#ffc861;stroke:#7a4a00;stroke-width:.8;filter:drop-shadow(0 0 2vh #ffc861);animation:crowndrop .9s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes crowndrop{from{transform:translateY(-70vh) rotate(-30deg);opacity:0}}
+.champ.gold .rib{display:inline}
+.champ.gold b{background:radial-gradient(circle at 35% 30%,#fff3b0,#ffc861 45%,#d4900a);box-shadow:0 0 0 .4vh #fff,0 0 3vh #ffc861}
+.champ.gold .rays{display:block;position:absolute;left:50%;top:50%;z-index:-1;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(#ffd76a55 0 7deg,#ffd76a00 7deg 18deg);-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%);animation:spin 18s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+
+@property --hx{syntax:'<length-percentage>';inherits:true;initial-value:50%}
+@property --hy{syntax:'<length-percentage>';inherits:true;initial-value:30%}
+@property --hr{syntax:'<length>';inherits:true;initial-value:0px}
+.award{transition:--hx .22s ease-out,--hy .22s ease-out,--hr .5s}
+.award.follow{transition:none}
+.shade{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;transition:opacity .7s;background:radial-gradient(circle at var(--hx) var(--hy),#0000 calc(var(--hr)*.5),#000000c4 var(--hr))}
+.award.heavy .shade{background:radial-gradient(circle at var(--hx) var(--hy),#0000 calc(var(--hr)*.5),#000000f2 var(--hr))}
+.award.dark .shade{opacity:1}
+.seek{position:absolute;top:-4vh;left:var(--hx);z-index:5;width:calc(var(--hr)*2.4);height:calc(var(--hy) + 4vh);translate:-50% 0;clip-path:polygon(45% 0,55% 0,100% 100%,0 100%);background:linear-gradient(#fff0,#fff5);mix-blend-mode:screen;opacity:0;transition:opacity .5s;pointer-events:none}
+.award.dark .seek{opacity:1}
+.award.heavy .seek{background:linear-gradient(#ffe08a00,#ffe08a77)}
+.gslot.lit{opacity:1;scale:1.3;filter:drop-shadow(0 0 2vh #fff)}
+.fw{position:absolute;z-index:6;left:var(--x);top:var(--y);pointer-events:none}
+.fw::before{content:"";position:absolute;width:16vh;height:16vh;border-radius:50%;translate:-50% -50%;background:radial-gradient(circle,var(--c),#0000 60%);animation:flash .5s ease-out forwards}
+@keyframes flash{from{opacity:.9;transform:scale(.2)}to{opacity:0;transform:scale(1.4)}}
+.fw i{position:absolute;width:1vh;height:1vh;margin:-.5vh;border-radius:50%;background:var(--c);box-shadow:0 0 1.5vh var(--c);animation:burst 1.5s cubic-bezier(.1,.7,.3,1) forwards}
+@keyframes burst{0%{transform:translate(0,0) scale(1.2);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 8vh)) scale(.3);opacity:0}}
+
+/* ---------- warp between photo wall and vote ---------- */
+.warp{position:fixed;inset:0;z-index:20;display:grid;place-items:center;overflow:hidden;pointer-events:none}
+.warp .swirl{position:absolute;width:260vmax;height:260vmax;border-radius:50%;background:radial-gradient(circle,#0b0618 0 4%,#1a0d33cc 9%,transparent 22%),repeating-conic-gradient(#2a1052 0 10deg,#5a2fb0 10deg 20deg,#ff8a2a 20deg 24deg,#a066ff 24deg 34deg,#2a1052 34deg 45deg);transform:scale(0)}
+.warp.on .swirl{animation:portal 4.4s cubic-bezier(.6,0,.3,1) forwards}
+@keyframes portal{0%{transform:scale(0) rotate(0);opacity:1}38%{transform:scale(1) rotate(300deg)}62%{transform:scale(1) rotate(420deg);opacity:1}100%{transform:scale(1.5) rotate(640deg);opacity:0}}
+.warp .streaks i{position:absolute;left:50%;top:50%;width:34vmax;height:.5vh;border-radius:9px;background:linear-gradient(90deg,transparent,#fff,#ffc861);transform-origin:0 50%;rotate:var(--a);opacity:0}
+.warp.on .streaks i{animation:streak .9s ease-in infinite;animation-delay:var(--d)}
+@keyframes streak{0%{transform:translateX(2vmax) scaleX(.1);opacity:0}30%{opacity:1}100%{transform:translateX(75vmax) scaleX(1);opacity:0}}
+.warp .streaks{position:absolute;inset:0}
+.warp.on .streaks{animation:fadeout 4.4s forwards}
+@keyframes fadeout{0%,70%{opacity:1}100%{opacity:0}}
+.warp b{position:relative;display:none;font-size:13vw;opacity:0}
+.warp[data-m="vote"] b[data-m="vote"],.warp[data-m="wall"] b[data-m="wall"]{display:block}
+.warp.on b{animation:warptxt 4.4s cubic-bezier(.2,1.3,.4,1) forwards}
+@keyframes warptxt{0%,28%{transform:scale(0) rotate(-25deg);opacity:0}44%{transform:scale(1.15) rotate(5deg);opacity:1}54%{transform:scale(1) rotate(0)}80%{transform:scale(1);opacity:1}100%{transform:scale(2.4);opacity:0}}
+
+/* ---------- blood running down the screen, to and from the break screen ---------- */
+.blood{position:fixed;inset:0;z-index:20;overflow:hidden;pointer-events:none}
+.blood .fall{position:absolute;inset:-2vh 0 0;filter:url(#goo) drop-shadow(0 1vh 1.5vh #000a)}
+.blood i{position:absolute;top:0;left:var(--l);width:var(--w);height:170vh;border-radius:0 0 50% 50%/0 0 3vh 3vh;background:#a8001b;transform:translateY(-100%)}
+.blood i.d::after{content:"";position:absolute;left:50%;bottom:0;width:170%;aspect-ratio:1;border-radius:50%;translate:-50% 25%;background:inherit}
+.blood.on i{animation:drip var(--t) var(--d) cubic-bezier(.6,0,.85,.55) forwards,bleedout var(--o) 2.7s cubic-bezier(.55,0,.9,.5) forwards}
+@keyframes drip{to{transform:translateY(0)}}
+@keyframes bleedout{from{transform:translateY(0)}to{transform:translateY(120vh)}}
 </style>
 </head>
 <body class="is-idle">
@@ -81,7 +228,16 @@ body.still .fs{opacity:0;pointer-events:none}
     <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
     <h1 class="title wave">100 คืนหลอน</h1>
     <div class="sub wave">คน ช.ที.เอ็ม</div>
+    <div class="date">วันเสาร์ที่ 31 ตุลาคม 2569</div>
   </div>
+  <section class="vote" id="vote" hidden>
+    <div class="vbg"><div class="spots"><i></i><i></i><i></i></div><div class="runway"><div class="rug"></div></div></div>
+    <div class="sign"><i class="rope l"></i><i class="rope r"></i><div class="plank">โหวตชุดแฟนซี</div></div>
+    <div class="flip" id="clock">
+      <div class="u"><div class="fc" id="fm"></div><small>นาที</small></div>
+      <div class="u"><div class="fc" id="fsec"></div><small>วิ</small></div>
+    </div>
+  </section>
   <div class="post" id="post" hidden>
     <div class="photo"><img id="pimg" alt=""></div>
     <div class="info">
@@ -97,10 +253,37 @@ body.still .fs{opacity:0;pointer-events:none}
   <svg class="out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
 </button>
 <aside class="qr">
-  <div class="point l"><b class="title wave">SCAN ME</b><svg viewBox="0 0 120 80"><path class="u" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/><path class="o" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
-  <div class="point r"><b class="title wave">เปิดวาร์ป</b><svg viewBox="0 0 120 80"><path class="u" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/><path class="o" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
+  <div class="point l"><b class="title wave" data-m="wall">SCAN ME</b><b class="title wave" data-m="vote">โหวตเลย</b><svg viewBox="0 0 120 80"><path class="u" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/><path class="o" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
+  <div class="point r"><b class="title wave" data-m="wall">เปิดวาร์ป</b><svg viewBox="0 0 120 80"><path class="u" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/><path class="o" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
   <div class="card"><div id="qr"></div><b id="count"></b></div>
 </aside>
+<div class="floats" id="floats"></div>
+<div class="closed">
+  <div class="tape t1"><span></span></div>
+  <div class="tape t2"><span></span></div>
+  <div class="warn">
+    <svg viewBox="0 0 24 22"><path d="M12 1.5L23 20.5H1z" fill="#111"/><path d="M12 5.5L19.6 18.5H4.4z" fill="#ffcc00"/><rect x="11" y="9" width="2" height="5.5" rx="1" fill="#111"/><circle cx="12" cy="16.3" r="1.2" fill="#111"/></svg>
+    <b>ปิดโหวตแล้ว</b>
+  </div>
+</div>
+<svg width="0" height="0" style="position:absolute"><symbol id="ghost" viewBox="0 0 80 90"><path d="M8 48Q8 6 40 6t32 42v38l-8-8-8 8-8-8-8 8-8-8-8 8-8-8-8 8z" fill="#fff" stroke="#2a1640" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="51" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="40" cy="58" rx="6" ry="5" fill="#2a1640"/></symbol></svg>
+<section class="award" id="award" hidden>
+  <div class="spots"><i></i><i></i><i></i></div>
+  <div class="a-head">ประกาศรางวัลชุดแฟนซี</div>
+  <div class="lineup" id="lineup"></div>
+  <div class="runway"><div class="rug"></div></div>
+  <div class="shade"></div><div class="seek"></div>
+  <div class="champ gh" data-p="3" hidden><svg class="g" viewBox="0 0 80 90"><use href="#ghost"/></svg><b></b><span class="pl">ที่ 3</span></div>
+  <div class="champ gh" data-p="2" hidden><svg class="g" viewBox="0 0 80 90"><use href="#ghost"/></svg><b></b><span class="pl">ที่ 2</span></div>
+  <div class="champ gh" data-p="1" hidden><i class="rays"></i><svg class="g" viewBox="0 0 80 90"><use href="#ghost"/><g class="rib"><path d="M27 47l10 23h7l-10-23z" fill="#c4122a"/><path d="M53 47l-10 23h-7l10-23z" fill="#e8343f"/></g></svg><b></b><svg class="crown" viewBox="0 0 24 16"><path d="M2 14L0 3l6 5 6-8 6 8 6-5-2 11z"/></svg><span class="pl">ที่ 1</span></div>
+</section>
+<div class="blood" id="blood" hidden><div class="fall"></div><svg width="0" height="0"><filter id="goo"><feGaussianBlur stdDeviation="12"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 26 -11"/></filter></svg></div>
+<div class="warp" id="warp" hidden>
+  <div class="swirl"></div>
+  <div class="streaks"></div>
+  <b class="title wave" data-m="vote">เปิดโหวต!</b>
+  <b class="title wave" data-m="wall">เปิดวาร์ป!</b>
+</div>
 
 <script src="deco.js"></script>
 <script type="module">
@@ -111,22 +294,28 @@ import { ref, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.2
 const SHOW_MS = 60_000;
 const $ = (s) => document.querySelector(s);
 
-new QRCode($('#qr'), {
-  text: new URL('send.html', location.href).href,
-  width: 512, height: 512, colorDark: '#1a0d33', colorLight: '#ffffff',
-  correctLevel: QRCode.CorrectLevel.M,
-});
+function drawQR(page) {
+  $('#qr').replaceChildren();
+  new QRCode($('#qr'), {
+    text: new URL(page, location.href).href,
+    width: 512, height: 512, colorDark: '#1a0d33', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+}
 
+let mode = '';
 let queue = [];
 let cur = null;
 let timer;
 
 function render() {
+  const vote = mode === 'vote';
   const waiting = queue.filter((x) => x.id !== cur?.id).length;
   $('#count').textContent = waiting ? `คิว ${waiting}` : '';
-  document.body.classList.toggle('is-idle', !cur);
-  $('#idle').hidden = !!cur;
-  $('#post').hidden = !cur;
+  document.body.classList.toggle('is-idle', !cur && !vote);
+  $('#idle').hidden = !!cur || vote;
+  $('#post').hidden = !cur || vote;
+  $('#vote').hidden = !vote;
 }
 
 function show(item) {
@@ -141,7 +330,7 @@ function show(item) {
 }
 
 function next() {
-  if (!cur && queue[0]) {
+  if (mode === 'wall' && !cur && queue[0]) {
     cur = queue[0];
     show(cur);
     timer = setTimeout(done, SHOW_MS);
@@ -167,8 +356,520 @@ onValue(ref(db, 'approved'), (snap) => {
   if (cur && !list.some((x) => x.id === cur.id)) { clearTimeout(timer); cur = null; }
   next();
 });
-let first = true;
-onValue(ref(db, 'skip'), () => { if (first) { first = false; return; } done(); });
+
+// Photo wall pauses during the vote and the break screen; the photo on screen goes back to the front of the queue.
+function setMode(m) {
+  mode = m;
+  document.body.classList.toggle('mode-vote', mode === 'vote');
+  document.body.classList.toggle('mode-pause', mode === 'pause');
+  drawQR(mode === 'vote' ? 'vote.html?openExternalBrowser=1' : 'send.html');
+  if (mode !== 'wall') { clearTimeout(timer); cur = null; }
+  next();
+}
+
+// Browsers keep sound muted until someone clicks or presses a key on the page.
+const ac = new AudioContext();
+const unlock = () => { if (ac.state === 'suspended') ac.resume(); };
+addEventListener('pointerdown', unlock);
+addEventListener('keydown', unlock);
+
+// Whoosh building up while the portal opens, a boom + chime as the text pops, then a fading whoosh.
+function warpSound(m) {
+  if (ac.state !== 'running') return;
+  const t = ac.currentTime, end = t + WARP_MS / 1000, pop = t + 1.9;
+  const out = ac.createGain();
+  out.gain.value = .8;
+  out.connect(ac.destination);
+
+  const buf = ac.createBuffer(1, Math.ceil(ac.sampleRate * WARP_MS / 1000), ac.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const noise = ac.createBufferSource();
+  noise.buffer = buf;
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass'; bp.Q.value = 1.2;
+  bp.frequency.setValueAtTime(150, t);
+  bp.frequency.exponentialRampToValueAtTime(2500, t + 1.7);
+  bp.frequency.exponentialRampToValueAtTime(300, end);
+  const ng = ac.createGain();
+  ng.gain.setValueAtTime(.001, t);
+  ng.gain.exponentialRampToValueAtTime(.7, t + 1.6);
+  ng.gain.exponentialRampToValueAtTime(.2, pop + .3);
+  ng.gain.exponentialRampToValueAtTime(.001, end);
+  noise.connect(bp).connect(ng).connect(out);
+  noise.start(t);
+
+  const rise = ac.createOscillator(), wob = ac.createOscillator(), wobAmt = ac.createGain();
+  const lp = ac.createBiquadFilter(), rg = ac.createGain();
+  rise.type = 'sawtooth';
+  rise.frequency.setValueAtTime(80, t);
+  rise.frequency.exponentialRampToValueAtTime(900, pop);
+  wob.frequency.value = 7; wobAmt.gain.value = 18;
+  wob.connect(wobAmt).connect(rise.frequency);
+  lp.type = 'lowpass'; lp.frequency.value = 1400;
+  rg.gain.setValueAtTime(.001, t);
+  rg.gain.exponentialRampToValueAtTime(.12, t + 1.6);
+  rg.gain.exponentialRampToValueAtTime(.001, pop + .05);
+  rise.connect(lp).connect(rg).connect(out);
+  rise.start(t); wob.start(t);
+  rise.stop(pop + .1); wob.stop(pop + .1);
+
+  const notes = [1047, 1319, 1568, 2093];
+  if (m === 'wall') notes.reverse();
+  boomChime(out, pop, notes);
+}
+
+function boomChime(out, at, notes, step = .09, vol = .25) {
+  const boom = ac.createOscillator(), bg = ac.createGain();
+  boom.frequency.setValueAtTime(160, at);
+  boom.frequency.exponentialRampToValueAtTime(40, at + .5);
+  bg.gain.setValueAtTime(.9, at);
+  bg.gain.exponentialRampToValueAtTime(.001, at + .9);
+  boom.connect(bg).connect(out);
+  boom.start(at); boom.stop(at + 1);
+
+  notes.forEach((f, i) => {
+    const o = ac.createOscillator(), g = ac.createGain(), t = at + .05 + i * step;
+    o.type = 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(.001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + .02);
+    g.gain.exponentialRampToValueAtTime(.001, t + 1);
+    o.connect(g).connect(out);
+    o.start(t); o.stop(t + 1.1);
+  });
+}
+
+function sfx() {
+  if (ac.state !== 'running') return null;
+  const out = ac.createGain();
+  out.gain.value = .8;
+  out.connect(ac.destination);
+  return out;
+}
+// Last five seconds: a beep each second, higher as it nears zero.
+function beep(sec) {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'square';
+  o.frequency.value = [0, 1320, 1175, 1047, 988, 880][sec];
+  g.gain.setValueAtTime(.001, t);
+  g.gain.exponentialRampToValueAtTime(.18, t + .01);
+  g.gain.setValueAtTime(.18, t + .16);
+  g.gain.exponentialRampToValueAtTime(.001, t + .3);
+  o.connect(g).connect(out);
+  o.start(t); o.stop(t + .32);
+  boomChime(out, t, []);
+}
+// Short two-tone alarm when voting closes.
+function alarm() {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'square';
+  for (let i = 0; i < 6; i++) o.frequency.setValueAtTime(i % 2 ? 660 : 880, t + i * .25);
+  g.gain.setValueAtTime(.1, t);
+  g.gain.setValueAtTime(.1, t + 1.4);
+  g.gain.exponentialRampToValueAtTime(.001, t + 1.6);
+  o.connect(g).connect(out);
+  o.start(t); o.stop(t + 1.6);
+}
+function noise(dur) {
+  const buf = ac.createBuffer(1, Math.ceil(ac.sampleRate * dur), ac.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const src = ac.createBufferSource();
+  src.buffer = buf;
+  return src;
+}
+// Snare roll that speeds up and swells, over a timpani rumble and a rising tone.
+function drumroll(dur) {
+  const out = sfx();
+  if (!out) return;
+  const t0 = ac.currentTime;
+  for (let t = 0; t < dur;) {
+    const k = t / dur, at = t0 + t;
+    const src = noise(.08), bp = ac.createBiquadFilter(), g = ac.createGain();
+    bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = .7;
+    g.gain.setValueAtTime(.08 + k * k * .7, at);
+    g.gain.exponentialRampToValueAtTime(.001, at + .07);
+    src.connect(bp).connect(g).connect(out);
+    src.start(at);
+    t += 1 / (10 + k * 26);
+  }
+  const tim = ac.createOscillator(), trem = ac.createOscillator(), tg = ac.createGain(), td = ac.createGain();
+  tim.frequency.value = 65;
+  trem.frequency.value = 11; td.gain.value = .25;
+  trem.connect(td).connect(tg.gain);
+  tg.gain.setValueAtTime(.05, t0);
+  tg.gain.linearRampToValueAtTime(.55, t0 + dur);
+  tim.connect(tg).connect(out);
+  const rise = ac.createOscillator(), rl = ac.createBiquadFilter(), rg = ac.createGain();
+  rise.type = 'sawtooth';
+  rise.frequency.setValueAtTime(110, t0);
+  rise.frequency.exponentialRampToValueAtTime(440, t0 + dur);
+  rl.type = 'lowpass'; rl.frequency.value = 1400;
+  rg.gain.setValueAtTime(.001, t0);
+  rg.gain.exponentialRampToValueAtTime(.12, t0 + dur);
+  rise.connect(rl).connect(rg).connect(out);
+  for (const o of [tim, trem, rise]) { o.start(t0); o.stop(t0 + dur); }
+}
+// Stage-light clack for each spotlight hop.
+function clack() {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, src = noise(.05), bp = ac.createBiquadFilter(), g = ac.createGain();
+  bp.type = 'bandpass'; bp.frequency.value = 4200; bp.Q.value = 3;
+  g.gain.setValueAtTime(.6, t);
+  g.gain.exponentialRampToValueAtTime(.001, t + .05);
+  src.connect(bp).connect(g).connect(out);
+  src.start(t);
+}
+// Cymbal crash + boom when the spotlight lands on the winner.
+function crash() {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, src = noise(2.2), hp = ac.createBiquadFilter(), g = ac.createGain();
+  hp.type = 'highpass'; hp.frequency.value = 4500;
+  g.gain.setValueAtTime(.7, t);
+  g.gain.exponentialRampToValueAtTime(.001, t + 2.2);
+  src.connect(hp).connect(g).connect(out);
+  src.start(t);
+  boomChime(out, t, []);
+}
+function pop() {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, src = noise(.6), hp = ac.createBiquadFilter(), g = ac.createGain();
+  hp.type = 'highpass'; hp.frequency.value = 1200;
+  g.gain.setValueAtTime(.5, t);
+  g.gain.exponentialRampToValueAtTime(.001, t + .6);
+  src.connect(hp).connect(g).connect(out);
+  src.start(t);
+  boomChime(out, t, []);
+}
+// Low gurgle with drips plopping, while the blood runs down.
+function bloodSound() {
+  const out = sfx();
+  if (!out) return;
+  const t = ac.currentTime, src = noise(3.2), lp = ac.createBiquadFilter(), g = ac.createGain();
+  lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(120, t);
+  lp.frequency.linearRampToValueAtTime(420, t + 2.5);
+  lp.frequency.linearRampToValueAtTime(100, t + 3.2);
+  g.gain.setValueAtTime(.001, t);
+  g.gain.exponentialRampToValueAtTime(.8, t + 2.4);
+  g.gain.exponentialRampToValueAtTime(.001, t + 3.2);
+  src.connect(lp).connect(g).connect(out);
+  src.start(t);
+  for (let i = 0; i < 10; i++) {
+    const at = t + Math.random() * 2.4, o = ac.createOscillator(), pg = ac.createGain();
+    o.frequency.setValueAtTime(700 + Math.random() * 500, at);
+    o.frequency.exponentialRampToValueAtTime(180, at + .12);
+    pg.gain.setValueAtTime(.001, at);
+    pg.gain.exponentialRampToValueAtTime(.25, at + .01);
+    pg.gain.exponentialRampToValueAtTime(.001, at + .15);
+    o.connect(pg).connect(out);
+    o.start(at); o.stop(at + .16);
+  }
+  boomChime(out, t + 2.5, []);
+}
+function bossSound() { const out = sfx(); if (out) boomChime(out, ac.currentTime, [1568, 2093, 2637], .07, .2); }
+
+// Portal sweeps over the screen; the view swaps while it covers everything.
+const SWAP_MS = 1700, WARP_MS = 4400;
+let warpT = [];
+function warp(m, then) {
+  const w = $('#warp');
+  warpT.forEach(clearTimeout);
+  w.dataset.m = m;
+  w.hidden = false;
+  w.classList.remove('on');
+  void w.offsetWidth;
+  w.classList.add('on');
+  warpSound(m);
+  warpT = [setTimeout(() => { setMode(m); then(); }, SWAP_MS), setTimeout(() => { w.hidden = true; w.classList.remove('on'); }, WARP_MS)];
+}
+
+// Uneven drips run down until the screen is red, the view swaps, then it all slides off the bottom.
+const BLEED_SWAP = 2550, BLEED_MS = 4800;
+$('#blood .fall').innerHTML = Array.from({ length: 12 }, (_, i) => `<i style="--l:${i * 100 / 12 - 2}%;--w:${100 / 12 + 4}%;--t:${1.9 + Math.random() * .5}s;--d:${Math.random() * .2}s;--o:${1.1 + Math.random() * .4}s"></i>`).join('')
+  + Array.from({ length: 26 }, () => `<i class="d" style="--l:${Math.random() * 98}%;--w:${.8 + Math.random() * 1.6}%;--t:${1 + Math.random() * .9}s;--d:${Math.random() * .6}s;--o:${1.5 + Math.random() * .5}s"></i>`).join('');
+function bleed(m, then) {
+  const b = $('#blood');
+  warpT.forEach(clearTimeout);
+  b.hidden = false;
+  replay(b, 'on');
+  bloodSound();
+  warpT = [setTimeout(() => { setMode(m); then(); }, BLEED_SWAP), setTimeout(() => { b.hidden = true; b.classList.remove('on'); }, BLEED_MS)];
+}
+
+const streaks = $('#warp .streaks');
+for (let i = 0; i < 48; i++) {
+  const s = document.createElement('i');
+  s.style.cssText = `--a:${Math.random() * 360}deg;--d:${-Math.random() * .9}s`;
+  streaks.append(s);
+}
+
+let target = '';
+let stage = '';
+let wantStage = '';
+onValue(ref(db, 'vote/stage'), (snap) => {
+  wantStage = snap.val() || 'off';
+  const m = wantStage === 'off' ? 'wall' : wantStage === 'pause' ? 'pause' : 'vote';
+  if (m === target) { setStage(wantStage); return; }
+  const first = !target;
+  target = m;
+  if (first) { setMode(m); setStage(wantStage); }
+  else (m === 'pause' || mode === 'pause' ? bleed : warp)(m, () => setStage(wantStage));
+});
+
+const CROWN = '<svg viewBox="0 0 24 16"><path d="M2 14L0 3l6 5 6-8 6 8 6-5-2 11z"/></svg>';
+
+// Restart a one-shot animation class.
+function replay(el, cls) {
+  el.classList.remove(cls);
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+
+// The first seconds bring a flood of votes; release them one by one so they stream up instead of clumping.
+const pending = [];
+function queueVote(b) {
+  if (b.w >= 5) { floatVote(b); return; }
+  pending.push(b);
+}
+(function drip() {
+  if (pending.length && $('#floats').childElementCount < 40) floatVote(pending.shift());
+  setTimeout(drip, pending.length > 20 ? 110 : 260);
+})();
+
+// Each ballot floats up as the voted number; executive ballots are big and gold.
+function floatVote(b) {
+  if (!(b.n >= 1 && b.n <= 10)) return;
+  const boss = b.w >= 5;
+  const el = document.createElement('div');
+  el.className = boss ? 'fl boss' : 'fl';
+  // Left or right of the clock and QR.
+  const [lo, hi] = Math.random() < .5 ? [2, boss ? 9 : 17] : [63, boss ? 81 : 89];
+  el.style.setProperty('--x', `${lo + Math.random() * (hi - lo)}vw`);
+  if (!boss) el.style.animationDuration = `${5.5 + Math.random() * 2}s`;
+  el.innerHTML = boss ? `${CROWN}<div class="av"></div><b>+5</b>` : '<div class="av"></div><b>+1</b>';
+  const av = el.querySelector('.av');
+  av.textContent = b.n;
+  av.classList.toggle('odd', b.n % 2 === 1);
+  el.addEventListener('animationend', (e) => { if (e.target === el) el.remove(); });
+  $('#floats').append(el);
+  if (boss) bossSound();
+}
+
+// Flip clock: old value folds down over the new one.
+for (const c of [$('#fm'), $('#fsec')]) c.innerHTML = '<div class="h t"><span></span></div><div class="h b"><span></span></div><div class="h t ft"><span></span></div><div class="h b fb"><span></span></div>';
+function flip(c, v) {
+  const old = c.dataset.v;
+  if (old === v) return;
+  c.dataset.v = v;
+  const [t, b, ft, fb] = c.querySelectorAll('span');
+  t.textContent = fb.textContent = v;
+  b.textContent = ft.textContent = old ?? v;
+  if (old === undefined) return;
+  replay(c, 'go');
+  clearTimeout(c.done);
+  c.done = setTimeout(() => { b.textContent = v; c.classList.remove('go'); }, 520);
+}
+
+// show = vote page up, not accepting yet; open = 1-minute timer running until vote/ends.
+const VOTE_MS = 60_000;
+let ends = 0, offset = 0, lastSec = -1, wasShut = null;
+onValue(ref(db, '.info/serverTimeOffset'), (snap) => { offset = snap.val() || 0; });
+onValue(ref(db, 'vote/ends'), (snap) => { ends = snap.val() || 0; });
+
+function clock() {
+  const live = stage === 'open';
+  const left = live ? Math.max(0, ends - (Date.now() + offset)) : stage === 'show' ? VOTE_MS : 0;
+  const sec = Math.ceil(left / 1000);
+  flip($('#fm'), String(Math.floor(sec / 60)).padStart(2, '0'));
+  flip($('#fsec'), String(sec % 60).padStart(2, '0'));
+  const shut = stage !== 'show' && !(live && sec > 0);
+  document.body.classList.toggle('vote-shut', shut);
+  document.body.classList.toggle('vote-hurry', live && sec > 0 && sec <= 10);
+  if (wasShut === false && shut && mode === 'vote') alarm();
+  wasShut = shut;
+  if (live && sec !== lastSec && lastSec !== -1 && sec > 0 && sec <= 10) replay($('#clock'), 'shake');
+  if (live && sec !== lastSec && lastSec !== -1 && sec > 0 && sec <= 5 && mode === 'vote') beep(sec);
+  lastSec = live ? sec : -1;
+}
+setInterval(clock, 100);
+
+function setStage(s) {
+  if (s === stage) return;
+  const prev = stage;
+  stage = s;
+  clock();
+  setAward(s, prev);
+}
+
+// award = carpet with all ten ghosts. Each announce: the winner at the front steps aside,
+// the lights drop, a spotlight searches the lineup to a drum roll, the next winner walks out, fireworks.
+const AWARD = { award: 0, r3: 1, r2: 2, r1: 3 };
+const SIDE = { 3: ['80%', '66vh', '20vh'], 2: ['20%', '66vh', '20vh'], 1: ['50%', '58vh', '30vh'] };
+const FRONT = ['50%', '62vh', '28vh'];
+let winners = {}, awardT = [], follow = 0;
+const later = (ms, fn) => awardT.push(setTimeout(fn, ms));
+$('#lineup').innerHTML = Array.from({ length: 10 }, (_, i) => `<div class="gslot gh" data-n="${i + 1}"><svg viewBox="0 0 80 90"><use href="#ghost"/></svg><b>${i + 1}</b></div>`).join('');
+const champ = (p) => $(`.champ[data-p="${p}"]`);
+const slotOf = (n) => $(`.gslot[data-n="${n}"]`);
+
+function moveTo(c, [x, y, w], t) {
+  c.style.setProperty('--t', t);
+  c.style.setProperty('--x', x);
+  c.style.setProperty('--y', y);
+  c.style.setProperty('--w', w);
+}
+
+function aim(el, r) {
+  const b = el.getBoundingClientRect(), a = $('#award').style;
+  a.setProperty('--hx', `${b.left + b.width / 2}px`);
+  a.setProperty('--hy', `${b.top + b.height / 2}px`);
+  a.setProperty('--hr', `${r ?? b.width * 1.4}px`);
+}
+
+function dark(on, heavy) {
+  $('#award').classList.toggle('dark', on);
+  $('#award').classList.toggle('heavy', !!heavy);
+}
+
+function place(p, pos) {
+  const c = champ(p), n = winners[`p${p}`];
+  c.hidden = !n;
+  if (!n) return;
+  c.querySelector('b').textContent = n;
+  c.classList.remove('walk');
+  c.classList.add('done');
+  c.classList.toggle('gold', p === 1);
+  moveTo(c, pos, '0s');
+  slotOf(n).classList.add('gone');
+}
+
+// Spotlight hops around the lineup, then lands on the winner.
+function seek(n, ms) {
+  const slots = [...document.querySelectorAll('.gslot:not(.gone)')];
+  let t = 0, last = null;
+  while (t < ms - 700) {
+    let s;
+    do s = slots[Math.floor(Math.random() * slots.length)]; while (slots.length > 1 && s === last);
+    last = s;
+    later(t, () => { aim(s); clack(); });
+    t += 160 + t / 12;
+  }
+  later(ms - 600, () => { aim(slotOf(n)); slotOf(n).classList.add('lit'); crash(); });
+}
+
+function walk(p, n, ms) {
+  const c = champ(p), slot = slotOf(n), r = slot.getBoundingClientRect();
+  c.querySelector('b').textContent = n;
+  c.classList.remove('done', 'gold');
+  c.hidden = false;
+  moveTo(c, [`${r.left + r.width / 2}px`, `${r.top + r.height / 2}px`, `${r.width}px`], '0s');
+  void c.offsetWidth;
+  slot.classList.remove('lit');
+  slot.classList.add('gone');
+  c.classList.add('walk');
+  moveTo(c, p === 1 ? SIDE[1] : FRONT, `${ms / 1000}s`);
+  // the spotlight follows the ghost down the carpet
+  $('#award').classList.add('follow');
+  const track = () => { aim(c); follow = requestAnimationFrame(track); };
+  track();
+}
+
+function fireworks(count, gold) {
+  const colors = gold ? ['#ffd76a', '#fff3b0', '#ffc861', '#ffffff'] : ['#ff8a2a', '#ffc861', '#a066ff', '#ffffff', '#ff5e7a', '#7ee0ff'];
+  for (let k = 0; k < count; k++) {
+    later(k * 380, () => {
+      const fw = document.createElement('div'), c = colors[Math.floor(Math.random() * colors.length)];
+      fw.className = 'fw';
+      fw.style.cssText = `--x:${8 + Math.random() * 84}%;--y:${6 + Math.random() * 36}%;--c:${c}`;
+      for (let i = 0; i < 30; i++) {
+        const a = i / 30 * Math.PI * 2, d = 9 + Math.random() * 9, dot = document.createElement('i');
+        dot.style.cssText = `--dx:${Math.cos(a) * d}vh;--dy:${Math.sin(a) * d}vh`;
+        fw.append(dot);
+      }
+      $('#award').append(fw);
+      setTimeout(() => fw.remove(), 1700);
+      pop();
+    });
+  }
+}
+
+function arrive(p) {
+  cancelAnimationFrame(follow);
+  $('#award').classList.remove('follow');
+  dark(false);
+  const c = champ(p);
+  c.classList.remove('walk');
+  c.classList.add('done');
+  const out = sfx();
+  if (p === 1) {
+    c.classList.add('gold');
+    $('#award').classList.add('gold');
+    if (out) boomChime(out, ac.currentTime, [523, 659, 784, 1047, 784, 1047, 1319, 1568, 2093], .12, .3);
+    fireworks(9, true);
+  } else {
+    if (out) boomChime(out, ac.currentTime, [784, 988, 1175, 1568]);
+    fireworks(4);
+  }
+}
+
+function announce(k) {
+  const p = 4 - k, n = winners[`p${p}`], top = p === 1;
+  let t = 0;
+  if (p < 3 && winners[`p${p + 1}`]) { moveTo(champ(p + 1), SIDE[p + 1], '1.2s'); t = 1300; }
+  if (!n) return;
+  const search = top ? 3600 : 2600, stroll = top ? 3400 : 2600;
+  later(t, () => {
+    aim($('#lineup'), innerHeight * .12);
+    dark(true, top);
+    drumroll((search - 600) / 1000);
+    seek(n, search);
+  });
+  later(t + search, () => walk(p, n, stroll));
+  later(t + search + stroll, () => arrive(p));
+}
+
+function setAward(s, prev) {
+  const k = AWARD[s], pk = AWARD[prev] ?? -1;
+  $('#award').hidden = k === undefined;
+  awardT.forEach(clearTimeout);
+  awardT = [];
+  cancelAnimationFrame(follow);
+  $('#award').classList.remove('follow', 'gold');
+  dark(false);
+  document.querySelectorAll('.fw').forEach((el) => el.remove());
+  if (k === undefined) return;
+  const step = pk === k - 1 ? k - 1 : k;
+  document.querySelectorAll('.gslot').forEach((g) => g.classList.remove('gone', 'lit'));
+  for (let p = 3; p >= 1; p--) {
+    const i = 4 - p;
+    if (i > step) champ(p).hidden = true;
+    else place(p, i < step || p === 1 ? SIDE[p] : FRONT);
+  }
+  if (step === 3) $('#award').classList.add('gold');
+  if (step === k - 1) announce(k);
+}
+onValue(ref(db, 'vote/winners'), (snap) => {
+  winners = snap.val() || {};
+  if (AWARD[stage] !== undefined) setAward(stage, null);
+});
+
+const tapeText = 'ปิดโหวต   ◆   '.repeat(24);
+document.querySelectorAll('.tape span').forEach((el) => { el.textContent = tapeText; });
+
+let seen = null;
+onValue(ref(db, 'vote/ballots'), (snap) => {
+  const all = snap.val() || {};
+  if (seen && mode === 'vote') for (const [id, b] of Object.entries(all)) if (!seen.has(id)) queueVote(b);
+  seen = new Set(Object.keys(all));
+});
 
 $('#fs').onclick = () => {
   if (document.fullscreenElement) document.exitFullscreen();

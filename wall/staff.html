@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="wall.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 .moon,.castle,.fog,.clouds{display:none}
 .top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;background:#0f0820e6;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -15,7 +16,6 @@
 .stat div{padding:8px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);font:500 13px "Mitr";color:var(--muted)}
 .stat b{display:block;font:600 24px/1.1 "Mitr";color:var(--ink)}
 .stat .o b{color:var(--orange)}
-.top .btn{padding:10px 14px;font-size:15px}
 .list{position:relative;z-index:5;max-width:560px;margin:0 auto;padding:16px;display:grid;gap:14px}
 .item{border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(8px);overflow:hidden;animation:in .3s}
 @keyframes in{from{opacity:0;transform:translateY(10px)}}
@@ -32,23 +32,74 @@
 .yes{background:linear-gradient(135deg,#3ddc84,#119a52);box-shadow:0 6px 0 #0b5e33}
 .yes:active{box-shadow:0 2px 0 #0b5e33}
 .empty{text-align:center;padding:60px 0;color:var(--muted);font:500 20px "Mitr"}
+.tabs{position:sticky;top:0;z-index:11;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 0;background:#0f0820e6;backdrop-filter:blur(10px)}
+.tabs button{padding:10px;border:0;border-radius:12px 12px 0 0;background:none;color:var(--muted);font:600 16px "Mitr";cursor:pointer}
+.tabs button.on{background:var(--card);color:var(--orange)}
+.top{top:52px}
+.panel{position:relative;z-index:5;max-width:560px;margin:0 auto;padding:16px;display:grid;gap:14px}
+.box{padding:14px;border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(8px)}
+.box h3{font:600 17px "Mitr";margin-bottom:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:14px;background:#0b0618}
+.seg button{padding:11px;border:0;border-radius:10px;background:none;color:var(--muted);font:600 16px "Mitr";cursor:pointer}
+.seg button.on{background:linear-gradient(135deg,var(--orange),#ff5e00);color:#fff}
+.rank{display:grid;gap:6px}
+.rank div{display:flex;align-items:center;gap:10px;font:500 15px "Mitr"}
+.rank i{font-style:normal;width:2em;color:var(--orange)}
+.rank span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank b{font:600 17px "Mitr"}
+.win{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.win label{display:grid;gap:6px;font:600 15px "Mitr";color:var(--orange);text-align:center}
+.win select{padding:10px;border-radius:12px;border:1px solid var(--line);background:#0b0618;color:#fff;font:600 17px "Mitr";text-align:center}
+#execQr{width:220px;margin:4px auto 10px;padding:10px;border-radius:14px;background:#fff}
+#execQr img,#execQr canvas{display:block;width:100%!important;height:auto!important}
+.row{display:flex;gap:8px}
+.row .btn{flex:1;padding:11px;font-size:15px}
+.danger{background:linear-gradient(135deg,#ff5468,#c8102e);box-shadow:0 6px 0 #7a0a1c}
 </style>
 </head>
 <body>
-<header class="top">
+<nav class="tabs"><button class="on" data-tab="photo">รูปขึ้นจอ</button><button data-tab="vote">โหวต</button></nav>
+<header class="top" data-pane="photo">
   <div class="stat">
     <div class="o"><b id="nIn">0</b>รอตรวจ</div>
     <div><b id="nQ">0</b>คิวจอ</div>
   </div>
-  <button class="btn ghost" id="skip">ข้ามคนบนจอ</button>
 </header>
-<main class="list" id="list"></main>
+<main class="list" id="list" data-pane="photo"></main>
+
+<main class="panel" data-pane="vote" hidden>
+  <section class="box">
+    <h3>จอใหญ่</h3>
+    <div class="seg" id="stage"><button data-v="show">เปิดหน้าโหวต</button><button data-v="open">เริ่มนับถอยหลัง 1 นาที</button><button data-v="closed">ปิดโหวต</button><button data-v="award">หน้าประกาศรางวัล</button><button data-v="r3">ประกาศที่ 3</button><button data-v="r2">ประกาศที่ 2</button><button data-v="r1">ประกาศที่ 1</button><button data-v="pause">หน้าพัก</button><button data-v="off">กลับหน้าส่งรูป</button></div>
+  </section>
+  <section class="box">
+    <h3>คะแนน</h3>
+    <div class="rank" id="rank"></div>
+  </section>
+  <section class="box">
+    <h3>ผู้ชนะ</h3>
+    <div class="win" id="win">
+      <label>ที่ 1<select data-p="p1"></select></label>
+      <label>ที่ 2<select data-p="p2"></select></label>
+      <label>ที่ 3<select data-p="p3"></select></label>
+    </div>
+  </section>
+  <section class="box">
+    <h3>QR ผู้บริหาร ×5</h3>
+    <div id="execQr"></div>
+    <div class="row"><button class="btn ghost" id="newKey">สร้าง QR ใหม่</button></div>
+  </section>
+  <section class="box">
+    <div class="row"><button class="btn danger" id="reset">ล้างคะแนนทั้งหมด</button></div>
+  </section>
+</main>
 
 <script src="deco.js"></script>
 <script type="module">
 import { db, requireLogin } from './fb.js';
 import { who } from './who.js';
-import { ref, onValue, update, remove, set, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { racerList, tally } from './race.js';
+import { ref, onValue, update, remove, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const $ = (s) => document.querySelector(s);
 const items = new Map();
@@ -83,8 +134,76 @@ requireLogin(() => {
     render(list);
   });
   onValue(ref(db, 'approved'), (snap) => { $('#nQ').textContent = snap.size; });
-  $('#skip').onclick = () => set(ref(db, 'skip'), serverTimestamp());
+  startVote();
 });
+
+document.querySelectorAll('.tabs button').forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll('[data-pane]').forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; });
+  };
+});
+
+function seg(box, value) {
+  box.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === value));
+}
+
+function startVote() {
+  const racers = racerList(null);
+  let score = tally(null);
+
+  // Voting runs 1 minute from the press, in server time; the database refuses ballots after vote/ends.
+  let offset = 0;
+  onValue(ref(db, '.info/serverTimeOffset'), (s) => { offset = s.val() || 0; });
+  $('#stage').onclick = (e) => {
+    const v = e.target.dataset.v;
+    if (v === 'open') update(ref(db, 'vote'), { stage: 'open', ends: Date.now() + offset + 60_000 });
+    else if (v) set(ref(db, 'vote/stage'), v === 'off' ? null : v);
+  };
+  onValue(ref(db, 'vote/stage'), (s) => seg($('#stage'), s.val() || 'off'));
+
+  // Winners are picked by hand; the big screen walks them out in this order.
+  const opts = '<option value="">-</option>' + racers.map((r) => `<option value="${r.n}">เบอร์ ${r.n}</option>`).join('');
+  document.querySelectorAll('#win select').forEach((sel) => {
+    sel.innerHTML = opts;
+    sel.onchange = () => set(ref(db, `vote/winners/${sel.dataset.p}`), sel.value ? +sel.value : null);
+  });
+  onValue(ref(db, 'vote/winners'), (s) => {
+    const w = s.val() || {};
+    document.querySelectorAll('#win select').forEach((sel) => { sel.value = w[sel.dataset.p] || ''; });
+  });
+
+  function drawRank() {
+    const box = $('#rank');
+    box.replaceChildren();
+    for (const r of [...racers].sort((a, b) => score[b.n] - score[a.n] || a.n - b.n)) {
+      const d = document.createElement('div');
+      d.innerHTML = '<i></i><span></span><b></b>';
+      d.querySelector('i').textContent = r.n;
+      d.querySelector('span').textContent = `เบอร์ ${r.n}`;
+      d.querySelector('b').textContent = score[r.n];
+      box.append(d);
+    }
+  }
+
+  onValue(ref(db, 'vote/ballots'), (s) => { score = tally(s.val()); drawRank(); });
+
+  // Executive QR carries a secret key; the database only accepts ×5 ballots that present it.
+  const newKey = () => set(ref(db, 'vote/key'), crypto.randomUUID().replace(/-/g, ''));
+  onValue(ref(db, 'vote/key'), (s) => {
+    const k = s.val();
+    if (!k) { newKey(); return; }
+    const u = new URL('vote.html', location.href);
+    u.searchParams.set('k', k);
+    u.searchParams.set('openExternalBrowser', '1');
+    $('#execQr').replaceChildren();
+    new QRCode($('#execQr'), { text: u.href, width: 512, height: 512, colorDark: '#1a0d33', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+  });
+  $('#newKey').onclick = () => { if (confirm('QR ผู้บริหารอันเดิมจะใช้ไม่ได้ สร้างใหม่?')) newKey(); };
+  $('#reset').onclick = () => {
+    if (confirm('ล้างคะแนนโหวตทั้งหมด?')) update(ref(db, 'vote'), { ballots: null, proof: null });
+  };
+}
 </script>
 </body>
 </html>
