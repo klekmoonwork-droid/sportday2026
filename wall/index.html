@@ -17,6 +17,8 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .moon{width:24vh;right:5vw;top:5vh}
 .idle h1{font-size:11vw}
 .idle .sub{font:500 4vw "Mitr";color:#fff;letter-spacing:.04em;margin-top:1vh;text-shadow:0 0 20px #a066ff}
+.idle .sub span{display:inline-block;padding-top:.3em;margin-top:-.3em;animation:hopglow 2s ease-in-out infinite;animation-delay:calc(var(--i)*80ms + .5s)}
+@keyframes hopglow{0%,55%,100%{transform:translateY(0) rotate(0);text-shadow:0 0 20px #a066ff}20%{transform:translateY(-22%) rotate(-6deg) scale(1.12);text-shadow:0 0 24px #ff8a2a,0 0 6px #ffc861}38%{transform:translateY(4%) rotate(4deg)}}
 .idle .eyebrow{font-size:1.4vw;margin-bottom:2vh}
 
 .post{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:5vw;width:100%;max-width:92vw;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
@@ -82,7 +84,7 @@ body.still .fs{opacity:0;pointer-events:none}
   <div class="idle" id="idle">
     <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
     <h1 class="title wave">100 คืนหลอน</h1>
-    <div class="sub">คน ช.ที.เอ็ม</div>
+    <div class="sub wave">คน ช.ที.เอ็ม</div>
   </div>
   <div class="post" id="post" hidden>
     <div class="photo"><img id="pimg" alt=""></div>
