@@ -575,7 +575,7 @@ html[data-mode="day"] .glow{display:none}
       <div class="hero-title">
         <div class="eyebrow">HALLOWEEN SPORTDAY</div>
         <h1 class="split">กีฬาสี</h1>
-        <div class="date">ศุกร์ 31 ต.ค. 2569 · 11:00 – 14:30</div>
+        <div class="date">เสาร์ 31 ต.ค. 2569 · 11:00 – 14:30</div>
         <div class="cd" data-cd="day"></div>
       </div>
       <div class="scrollcue"></div>
@@ -589,7 +589,7 @@ html[data-mode="day"] .glow{display:none}
           <button class="on" data-lm="all"><i style="--c:#2a1640"></i><b>ภาพรวมรีสอร์ต</b></button>
           <button data-lm="venue"><i style="--c:#6b2fb3"></i><b>ห้องประชุมสายลม</b><small>สถานที่จัดงาน เช้า · เย็น</small></button>
           <button data-lm="lunch"><i style="--c:#e2456f"></i><b>ที่ทานข้าวเที่ยง</b><small>ห้องอาหารเพลินทะเล</small></button>
-          <button data-lm="breakfast"><i style="--c:#e2456f"></i><b>ที่ทานข้าวเช้า</b><small>ห้องอาหารเพลินทะเล</small></button>
+          <button data-lm="breakfast"><i style="--c:#e2456f"></i><b>ที่ทานข้าวเช้า</b><small>ระเบียงทราย</small></button>
           <button data-lm="garden"><i style="--c:#3fa65a"></i><b>ห้องการ์เด้นวิว</b><small>ห้อง 7xx</small></button>
           <button data-lm="pool"><i style="--c:#1e9bd1"></i><b>ห้องพักริมสระน้ำ</b><small>ห้อง 6xx</small></button>
           <button data-lm="deluxe"><i style="--c:#ff7a1a"></i><b>ห้องพักดีลักซ์</b><small>ห้อง 100–400 · F1 F2</small></button>
@@ -678,7 +678,7 @@ html[data-mode="day"] .glow{display:none}
         <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
         <h1 class="split night-h">100 คืนหลอน</h1>
         <div class="h1-sub">คน ช.ที.เอ็ม</div>
-        <div class="date">ศุกร์ 31 ต.ค. 2569 · 16:30 – 23:00</div>
+        <div class="date">เสาร์ 31 ต.ค. 2569 · 16:30 – 23:00</div>
         <div class="cd" data-cd="night"></div>
       </div>
       <div class="scrollcue" style="border-color:#fff"></div>
@@ -1227,8 +1227,8 @@ $('[data-newbie-count]').textContent = NEWBIES.length + ' คน';
     ${bld(585, 100, 75, 80, '#b98a5e', ['ศาล'], 18)}
     ${bld(488, 325, 72, 135, PLAIN, ['M1–M3'], 20, '', '#5a3d1e')}
     ${bld(110, 605, 345, 80, '#ff7a1a', ['อาคารโรงแรม 4 ชั้น', 'ห้องดีลักซ์ · ห้องประชุมมารีน่า'], 21, 'class="pick tower" data-lm="deluxe"')}
-    ${bld(478, 605, 92, 85, PLAIN, ['ระเบียง', 'ทราย'], 18, '', '#5a3d1e')}
-    <g class="pick" data-lm="lunch breakfast"><rect x="490" y="740" width="60" height="90" rx="12" fill="#e2456f" stroke="#2a1640" stroke-opacity=".35" stroke-width="2.5"/><text x="520" y="790" text-anchor="middle" font-size="15" font-weight="600" fill="#fff">อาหาร</text>
+    ${bld(478, 605, 92, 85, PLAIN, ['ระเบียง', 'ทราย'], 18, 'class="pick" data-lm="breakfast"', '#5a3d1e')}
+    <g class="pick" data-lm="lunch"><rect x="490" y="740" width="60" height="90" rx="12" fill="#e2456f" stroke="#2a1640" stroke-opacity=".35" stroke-width="2.5"/><text x="520" y="790" text-anchor="middle" font-size="15" font-weight="600" fill="#fff">อาหาร</text>
       <rect x="400" y="836" width="240" height="40" rx="20" fill="#fff" stroke="#e2456f" stroke-width="3"/>
       <text x="520" y="863" text-anchor="middle" font-size="19" font-weight="600" fill="#2a1640">ห้องอาหารเพลินทะเล</text></g>
     <g class="pick" data-lm="venue"><rect class="venue-ring" x="725" y="410" width="230" height="190" rx="22" fill="none" stroke="#ffb627" stroke-width="6"/>
@@ -1265,7 +1265,7 @@ $('[data-newbie-count]').textContent = NEWBIES.length + ' คน';
 const hotelView = $('.hotel-view'), hotelMap = $('.hotel-map'), zoomBtn = $('.zoom-btn'), found = $('.found');
 const FULL = [0, 60, 1526, 900];
 const LM = {
-  all: FULL, venue: [680, 360, 330, 290], lunch: [390, 700, 280, 200], breakfast: [390, 700, 280, 200],
+  all: FULL, venue: [680, 360, 330, 290], lunch: [390, 700, 280, 200], breakfast: [384, 548, 280, 200],
   garden: [350, 110, 360, 360], pool: [350, 350, 360, 380], deluxe: null,
 };
 let vb = FULL.slice(), target = FULL, anim = 0, focusBox = null;
