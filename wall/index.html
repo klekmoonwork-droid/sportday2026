@@ -6,7 +6,7 @@
 <title>100 คืนหลอน · จอ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&family=Sriracha&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="wall.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -45,23 +45,29 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .qr .card{position:relative;padding:1.4vh;border-radius:2vh;background:#fff;box-shadow:0 0 0 .5vh var(--orange),0 0 6vh #ff7a1a88;animation:nudge 5s ease-in-out infinite}
 @keyframes nudge{0%,86%,100%{rotate:0deg}89%{rotate:-6deg}92%{rotate:5deg}95%{rotate:-3deg}98%{rotate:2deg}}
 .qr #qr img,.qr #qr canvas{display:block;width:100%!important;height:auto!important}
-.qr b{display:block;margin-top:1vh;text-align:center;font:600 2.4vh "Mitr";color:#1a0d33}
-.warp{position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;translate:-50% -50%;pointer-events:none}
-.warp::before,.warp::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(#a066ff,#ff8a2a,#ffc861,#e0408f,#7dff6a,#a066ff);-webkit-mask:radial-gradient(closest-side,#0000 62%,#000 65%,#000 76%,#0000 80%);mask:radial-gradient(closest-side,#0000 62%,#000 65%,#000 76%,#0000 80%);filter:blur(1.5px);animation:spin 2.4s linear infinite}
-.warp::after{inset:-14%;opacity:.55;animation:spin 4s linear infinite reverse}
-@keyframes spin{to{rotate:360deg}}
-.call{position:absolute;left:50%;bottom:calc(100% + var(--s)*.34);translate:-50% 0;white-space:nowrap;font:600 calc(var(--s)*.19) "Mitr";color:#fff;padding:.15em .9em .3em;border-radius:99px;background:linear-gradient(135deg,#a066ff,#5a2fb0);box-shadow:0 0 0 .08em #ffc861,0 0 1em #a066ff;text-shadow:0 0 .3em #a066ff,0 0 .7em #ff8a2a,0 .08em 0 #1a0d33}
-.call span{display:inline-block;padding-top:.25em;margin-top:-.25em;animation:wave 1.8s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}
+#count{display:block;margin-top:1vh;text-align:center;font:600 2.4vh "Mitr";color:#1a0d33}
+.point{position:absolute;bottom:18%;display:flex;flex-direction:column;align-items:flex-start;width:calc(var(--s)*1.1);pointer-events:none;animation:poke 1.4s ease-in-out infinite}
+.point.l{right:calc(100% + var(--s)*.12)}
+.point.r{left:calc(100% + var(--s)*.12);align-items:flex-end;--dx:-1}
+.point b{display:block;white-space:nowrap;line-height:1;margin:0 0 calc(var(--s)*-.02)}
+.point svg{width:calc(var(--s)*.85);overflow:visible;fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.point.l svg{align-self:flex-end}
+.point.r svg{align-self:flex-start;transform:scaleX(-1)}
+.point.l b{font:400 calc(var(--s)*.3) "Creepster";letter-spacing:.04em;color:#7dff6a;text-shadow:0 .05em 0 #0b3d06,0 0 .3em #7dff6a99;rotate:-8deg}
+.point.l svg{stroke:#7dff6a;filter:drop-shadow(0 0 6px #7dff6a99)}
+.point.r b{font:400 calc(var(--s)*.27) "Sriracha";color:#ffc861;text-shadow:0 .06em 0 #6a2a00,0 0 .3em #ff8a2a99;rotate:7deg}
+.point.r svg{stroke:#ff8a2a;filter:drop-shadow(0 0 6px #ff8a2a99)}
+@keyframes poke{0%,100%{transform:translate(0,0)}50%{transform:translate(calc(var(--dx,1)*var(--s)*.07),calc(var(--s)*.03))}}
+body:not(.is-idle) .point.r{display:none}
 body.is-idle .qr{--s:26vh;right:50%;bottom:5vh;translate:50% 0}
-body.is-idle .qr b{display:none}
-body:not(.is-idle) .call{left:auto;right:0;translate:none}
+body.is-idle #count{display:none}
 .cauldron{position:fixed;z-index:2;right:6vw;bottom:1vh;width:26vh;filter:drop-shadow(0 0 4vh #7dff6a66);transition:opacity .6s,transform .6s}
 .cauldron .body{animation:hop 3s ease-in-out infinite;transform-origin:50% 100%;transform-box:fill-box}
 .cauldron .bub{transform-box:fill-box;transform-origin:center;animation:bub 2.2s ease-in infinite}
 .cauldron .bub:nth-of-type(2){animation-delay:-.7s}.cauldron .bub:nth-of-type(3){animation-delay:-1.4s}.cauldron .bub:nth-of-type(4){animation-delay:-1.9s}
 @keyframes bub{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}100%{transform:translateY(-60px) scale(1.2);opacity:0}}
 body:not(.is-idle) .cauldron{opacity:0;transform:translateY(30%)}
-body.is-idle .idle{margin-bottom:44vh}
+body.is-idle .idle{margin-bottom:26vh}
 .fs{position:fixed;z-index:10;left:3vh;top:3vh;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);color:var(--orange);cursor:inherit;transition:opacity .4s,transform .2s}
 .fs:hover{transform:scale(1.08);border-color:var(--orange)}
 .fs svg{width:28px;height:28px}
@@ -91,8 +97,8 @@ body.still .fs{opacity:0;pointer-events:none}
   <svg class="out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
 </button>
 <aside class="qr">
-  <div class="warp"></div>
-  <div class="call wave">เปิดวาปขึ้นจอ</div>
+  <div class="point l"><b>SCAN ME</b><svg viewBox="0 0 120 80"><path d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
+  <div class="point r"><b>เปิดวาร์ป</b><svg viewBox="0 0 120 80"><path d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
   <div class="card"><div id="qr"></div><b id="count"></b></div>
 </aside>
 <svg class="cauldron" viewBox="0 0 120 120">
