@@ -26,6 +26,8 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .photo img{display:block;max-height:68vh;max-width:46vw;border-radius:.6vh}
 .info{min-width:0;padding-right:22vh}
 .who{display:flex;flex-wrap:wrap;align-items:center;gap:1.8vh}
+.who:empty{display:none}
+.who.social{margin-top:4vh}
 .who span{display:inline-flex;align-items:center;gap:1.2vh;max-width:100%;font:600 4.4vh "Mitr";padding:1vh 3vh 1.3vh;border-radius:99px;color:#fff;overflow-wrap:anywhere;animation:bob 1.8s ease-in-out infinite}
 .who span:nth-child(2){animation-delay:-.6s}.who span:nth-child(3){animation-delay:-1.2s}
 .who svg{width:1em;height:1em;flex:none}
@@ -86,8 +88,9 @@ body.still .fs{opacity:0;pointer-events:none}
   <div class="post" id="post" hidden>
     <div class="photo"><img id="pimg" alt=""></div>
     <div class="info">
-      <div class="who" id="pwho"></div>
+      <div class="who" id="pname"></div>
       <div class="quote" id="pq"></div>
+      <div class="who social" id="psocial"></div>
       <div class="timer"><i id="bar"></i></div>
     </div>
   </div>
@@ -145,7 +148,8 @@ function render() {
 
 function show(item) {
   $('#pimg').src = item.img;
-  who($('#pwho'), item);
+  who($('#pname'), item, ['nick']);
+  who($('#psocial'), item, ['ig', 'fb']);
   $('#pq').textContent = item.quote || '';
   const post = $('#post'), bar = $('#bar');
   post.style.animation = 'none'; bar.classList.remove('run');
