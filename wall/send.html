@@ -9,22 +9,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="wall.css">
 <style>
-.moon{width:min(34vw,160px);right:6%;top:4%}
+.moon{position:absolute;width:64px;right:22px;top:calc(76px + env(safe-area-inset-top,0px));box-shadow:0 0 40px 12px #ff8a2a66}
+.c3{top:18%}.c4{right:4%;top:auto;bottom:22%}
 .wrap{position:relative;z-index:5;max-width:460px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top,0px)) 16px 40px}
 h1{font-size:44px;text-align:center}
 .sub{text-align:center;font:500 20px "Mitr";color:#fff;margin:4px 0 22px;text-shadow:0 0 20px #a066ff}
 form{display:grid;gap:14px}
-.pick{position:relative;display:grid;place-items:center;aspect-ratio:4/5;border-radius:22px;border:2px dashed #ff8a2a99;background:var(--card);backdrop-filter:blur(8px);cursor:pointer;overflow:hidden}
-.pick svg{width:64px;height:64px;color:var(--orange)}
-.pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pick{position:relative;display:grid;place-items:center;aspect-ratio:4/5;border-radius:22px;border:2px dashed #ff8a2a99;background:var(--card);backdrop-filter:blur(8px);cursor:pointer;overflow:hidden;transition:border-color .3s}
+.pick.bad{border-color:#ff5468;animation:shake .4s}
+.pick svg{width:64px;height:64px;color:var(--orange);animation:wiggle 1.6s ease-in-out infinite}
+@keyframes wiggle{0%,100%{transform:rotate(0) scale(1)}15%{transform:rotate(-12deg) scale(1.1)}30%{transform:rotate(10deg) scale(1.1)}45%{transform:rotate(-6deg)}60%{transform:rotate(0) scale(1)}}
+.pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
 .pick input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.ig{position:relative}
-.ig span{position:absolute;left:16px;top:50%;translate:0 -50%;font:500 17px "Mitr";color:var(--muted)}
-.ig .field{padding-left:34px}
+.ic{position:relative}
+.ic svg{position:absolute;left:14px;top:50%;width:22px;height:22px;translate:0 -50%;color:var(--muted)}
+.ic .field{padding-left:46px}
+.field.bad{border-color:#ff5468;animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 textarea.field{resize:none;min-height:96px}
 .count{text-align:right;font-size:13px;color:var(--muted);margin-top:-8px}
+.btn{animation:jelly 2.4s ease-in-out infinite}
+.btn:disabled{animation:none}
+@keyframes jelly{0%,70%,100%{transform:scale(1,1)}76%{transform:scale(1.06,.92)}82%{transform:scale(.95,1.05)}88%{transform:scale(1.03,.97)}}
 .done{text-align:center;padding:40px 0}
-.done svg{width:92px;height:92px;margin:0 auto 14px}
+.done svg{width:110px;height:110px;margin:0 auto 14px;animation:dance .9s ease-in-out infinite}
+@keyframes dance{0%,100%{transform:rotate(-12deg) translateY(0)}50%{transform:rotate(12deg) translateY(-14px)}}
 .done b{display:block;font:600 30px "Mitr";color:var(--orange)}
 .done .wait{margin-top:10px;font:500 18px "Mitr";color:var(--muted)}
 .done .btn{margin-top:22px}
@@ -33,16 +43,27 @@ textarea.field{resize:none;min-height:96px}
 </head>
 <body>
 <main class="wrap">
-  <h1 class="title">100 คืนหลอน</h1>
+  <h1 class="title wave">100 คืนหลอน</h1>
   <div class="sub">ขึ้นจอ</div>
 
-  <form id="f">
-    <label class="pick">
+  <form id="f" novalidate>
+    <label class="pick" id="pick">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="4"/></svg>
       <img id="prev" alt="" hidden>
-      <input id="file" type="file" accept="image/*" required>
+      <input id="file" type="file" accept="image/*">
     </label>
-    <div class="ig"><span>@</span><input class="field" id="ig" maxlength="30" placeholder="IG" autocomplete="off" autocapitalize="off"></div>
+    <div class="ic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
+      <input class="field" id="nick" maxlength="40" placeholder="ชื่อเล่น - สาขา" autocomplete="off">
+    </div>
+    <div class="ic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <input class="field" id="ig" maxlength="30" placeholder="IG" autocomplete="off" autocapitalize="off">
+    </div>
+    <div class="ic">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z"/></svg>
+      <input class="field" id="fb" maxlength="40" placeholder="Facebook" autocomplete="off">
+    </div>
     <textarea class="field" id="quote" maxlength="120" placeholder="คำคม"></textarea>
     <div class="count" id="count">0/120</div>
     <button class="btn" id="send">ส่งขึ้นจอ</button>
@@ -83,10 +104,18 @@ async function shrink(file) {
   return out;
 }
 
+function flag(el) {
+  el.classList.remove('bad');
+  void el.offsetWidth;
+  el.classList.add('bad');
+}
+document.querySelectorAll('.field').forEach((el) => el.addEventListener('input', () => el.classList.remove('bad')));
+
 $('#file').onchange = async () => {
   const f = $('#file').files[0];
   if (!f) return;
   $('#err').textContent = '';
+  $('#pick').classList.remove('bad');
   try {
     img = await shrink(f);
     $('#prev').src = img;
@@ -134,15 +163,28 @@ $('#again').onclick = () => {
 
 $('#f').onsubmit = async (e) => {
   e.preventDefault();
-  if (!img) { $('#err').textContent = 'เลือกรูปก่อน'; return; }
+  const data = {
+    img,
+    nick: $('#nick').value.trim().slice(0, 40),
+    ig: $('#ig').value.trim().replace(/^@+/, '').slice(0, 30),
+    fb: $('#fb').value.trim().slice(0, 40),
+    quote: $('#quote').value.trim().slice(0, 120),
+  };
+  if (!img) {
+    flag($('#pick'));
+    $('#err').textContent = 'ใส่รูปก่อน';
+    return;
+  }
+  if (!data.nick && !data.ig && !data.fb) {
+    flag($('#nick'));
+    $('#nick').focus();
+    $('#err').textContent = 'กรอกชื่อเล่น - สาขา';
+    return;
+  }
   $('#send').disabled = true;
   $('#err').textContent = '';
   try {
-    await push(ref(db, 'inbox'), {
-      img,
-      ig: $('#ig').value.trim().replace(/^@+/, '').slice(0, 30),
-      quote: $('#quote').value.trim().slice(0, 120),
-    });
+    await push(ref(db, 'inbox'), data);
     try { localStorage.setItem('wall-sent', Date.now()); } catch {}
     showDone();
   } catch {

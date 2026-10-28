@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="wall.css">
 <style>
-.moon,.castle,.fog{display:none}
+.moon,.castle,.fog,.critter{display:none}
 .top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;background:#0f0820e6;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .stat{flex:1;display:flex;gap:8px}
 .stat div{padding:8px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);font:500 13px "Mitr";color:var(--muted)}
@@ -21,7 +21,10 @@
 @keyframes in{from{opacity:0;transform:translateY(10px)}}
 .item img{display:block;width:100%;max-height:60vh;object-fit:contain;background:#05020d}
 .item .t{padding:12px 14px 0}
-.item .ig{font:600 17px "Mitr";color:var(--purple)}
+.who{display:flex;flex-wrap:wrap;gap:6px}
+.who span{display:inline-flex;align-items:center;gap:6px;font:500 14px "Mitr";padding:4px 12px;border-radius:99px;color:#fff;background:var(--purple)}
+.who .nick{background:var(--orange)}
+.who svg{width:15px;height:15px}
 .item .q{margin-top:4px;font-size:17px;line-height:1.5;overflow-wrap:anywhere}
 .item .act{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
 .no{background:linear-gradient(135deg,#ff5468,#c8102e);box-shadow:0 6px 0 #7a0a1c}
@@ -44,6 +47,7 @@
 <script src="deco.js"></script>
 <script type="module">
 import { db, requireLogin } from './fb.js';
+import { who } from './who.js';
 import { ref, onValue, update, remove, set, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const $ = (s) => document.querySelector(s);
@@ -52,10 +56,10 @@ const items = new Map();
 function card(id, v) {
   const el = document.createElement('article');
   el.className = 'item';
-  el.innerHTML = `<img alt=""><div class="t"><div class="ig"></div><div class="q"></div></div>
+  el.innerHTML = `<img alt=""><div class="t"><div class="who"></div><div class="q"></div></div>
     <div class="act"><button class="btn no">ไม่ผ่าน</button><button class="btn yes">ผ่าน</button></div>`;
   el.querySelector('img').src = v.img;
-  el.querySelector('.ig').textContent = v.ig ? `@${v.ig}` : '';
+  who(el.querySelector('.who'), v);
   el.querySelector('.q').textContent = v.quote || '';
   el.querySelector('.no').onclick = () => remove(ref(db, `inbox/${id}`));
   el.querySelector('.yes').onclick = () => update(ref(db), { [`approved/${id}`]: v, [`inbox/${id}`]: null });

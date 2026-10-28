@@ -14,17 +14,27 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .stage{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:4vh 4vw}
 
 .idle{text-align:center}
-.idle h1{font-size:13vw}
+.moon{width:24vh;right:5vw;top:5vh}
+.idle h1{font-size:11vw}
 .idle .sub{font:500 4vw "Mitr";color:#fff;letter-spacing:.04em;margin-top:1vh;text-shadow:0 0 20px #a066ff}
 .idle .eyebrow{font-size:1.4vw;margin-bottom:2vh}
 
 .post{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:5vw;width:100%;max-width:92vw;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes pop{from{transform:translateY(8vh) scale(.6) rotate(-6deg);opacity:0}}
-.photo{padding:1.4vh 1.4vh 6vh;background:#fff6ea;border-radius:1.2vh;rotate:-3deg;box-shadow:0 0 0 .6vh var(--orange),0 0 12vh 2vh #ff7a1a66,0 4vh 8vh #0008}
+.photo{padding:1.4vh 1.4vh 6vh;background:#fff6ea;border-radius:1.2vh;box-shadow:0 0 0 .6vh var(--orange),0 0 12vh 2vh #ff7a1a66,0 4vh 8vh #0008;animation:wobble 2.8s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(2deg) translateY(-1.2vh)}}
 .photo img{display:block;max-height:68vh;max-width:46vw;border-radius:.6vh}
 .info{min-width:0;padding-right:22vh}
-.ig{display:inline-block;font:600 5vh "Mitr";padding:1vh 3vh 1.4vh;border-radius:99px;background:linear-gradient(135deg,var(--purple),#5a2fb0);color:#fff;box-shadow:0 0 6vh #a066ff88;overflow-wrap:anywhere}
-.quote{margin-top:4vh;font:500 7vh/1.35 "Mitr";color:#fff;text-shadow:0 0 3vh #ff7a1a88;overflow-wrap:anywhere}
+.who{display:flex;flex-wrap:wrap;align-items:center;gap:1.8vh}
+.who span{display:inline-flex;align-items:center;gap:1.2vh;max-width:100%;font:600 4.4vh "Mitr";padding:1vh 3vh 1.3vh;border-radius:99px;color:#fff;overflow-wrap:anywhere;animation:bob 1.8s ease-in-out infinite}
+.who span:nth-child(2){animation-delay:-.6s}.who span:nth-child(3){animation-delay:-1.2s}
+.who svg{width:1em;height:1em;flex:none}
+.who .nick{font-size:6vh;background:linear-gradient(135deg,var(--orange),#ff5e00);box-shadow:0 0 6vh #ff7a1a88}
+.who .ig{background:linear-gradient(135deg,#a066ff,#e0408f);box-shadow:0 0 6vh #a066ff88}
+.who .fb{background:linear-gradient(135deg,#5a6bff,#5a2fb0);box-shadow:0 0 6vh #5a6bff88}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-1.2vh) rotate(-3deg)}60%{transform:translateY(0) rotate(2deg)}}
+.quote{margin-top:4vh;font:500 7vh/1.35 "Mitr";color:#fff;text-shadow:0 0 3vh #ff7a1a88;overflow-wrap:anywhere;transform-origin:left center;animation:sway 3.2s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(-1.2deg) scale(1.03)}}
 .quote:empty{display:none}
 .timer{margin-top:5vh;height:1.2vh;border-radius:99px;background:var(--line);overflow:hidden}
 .timer i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));transform-origin:left}
@@ -34,6 +44,8 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .qr{position:fixed;z-index:6;right:3vh;bottom:3vh;width:20vh;padding:1.4vh;border-radius:2vh;background:#fff;box-shadow:0 0 0 .5vh var(--orange),0 0 6vh #ff7a1a88;transition:all .8s cubic-bezier(.7,0,.2,1)}
 .qr #qr img,.qr #qr canvas{display:block;width:100%!important;height:auto!important}
 .qr b{display:block;margin-top:1vh;text-align:center;font:600 2.4vh "Mitr";color:#1a0d33}
+.qr{animation:nudge 5s ease-in-out infinite}
+@keyframes nudge{0%,86%,100%{rotate:0deg}89%{rotate:-6deg}92%{rotate:5deg}95%{rotate:-3deg}98%{rotate:2deg}}
 body.is-idle .qr{width:26vh;right:50%;bottom:4vh;translate:50% 0}
 body.is-idle .qr b{display:none}
 body.is-idle .idle{margin-bottom:24vh}
@@ -49,13 +61,13 @@ body.still .fs{opacity:0;pointer-events:none}
 <main class="stage">
   <div class="idle" id="idle">
     <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
-    <h1 class="title">100 คืนหลอน</h1>
+    <h1 class="title wave">100 คืนหลอน</h1>
     <div class="sub">คน ช.ที.เอ็ม</div>
   </div>
   <div class="post" id="post" hidden>
     <div class="photo"><img id="pimg" alt=""></div>
     <div class="info">
-      <div class="ig" id="pig"></div>
+      <div class="who" id="pwho"></div>
       <div class="quote" id="pq"></div>
       <div class="timer"><i id="bar"></i></div>
     </div>
@@ -70,6 +82,7 @@ body.still .fs{opacity:0;pointer-events:none}
 <script src="deco.js"></script>
 <script type="module">
 import { db } from './fb.js';
+import { who } from './who.js';
 import { ref, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const SHOW_MS = 60_000;
@@ -95,8 +108,7 @@ function render() {
 
 function show(item) {
   $('#pimg').src = item.img;
-  $('#pig').textContent = item.ig ? `@${item.ig}` : '';
-  $('#pig').hidden = !item.ig;
+  who($('#pwho'), item);
   $('#pq').textContent = item.quote || '';
   const post = $('#post'), bar = $('#bar');
   post.style.animation = 'none'; bar.classList.remove('run');
