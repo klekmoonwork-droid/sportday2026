@@ -64,12 +64,6 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 body:not(.is-idle) .point.r{display:none}
 body.is-idle .qr{--s:26vh;right:50%;bottom:5vh;translate:50% 0}
 body.is-idle #count{display:none}
-.cauldron{position:fixed;z-index:2;right:6vw;bottom:1vh;width:26vh;filter:drop-shadow(0 0 4vh #7dff6a66);transition:opacity .6s,transform .6s}
-.cauldron .body{animation:hop 3s ease-in-out infinite;transform-origin:50% 100%;transform-box:fill-box}
-.cauldron .bub{transform-box:fill-box;transform-origin:center;animation:bub 2.2s ease-in infinite}
-.cauldron .bub:nth-of-type(2){animation-delay:-.7s}.cauldron .bub:nth-of-type(3){animation-delay:-1.4s}.cauldron .bub:nth-of-type(4){animation-delay:-1.9s}
-@keyframes bub{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}100%{transform:translateY(-60px) scale(1.2);opacity:0}}
-body:not(.is-idle) .cauldron{opacity:0;transform:translateY(30%)}
 body.is-idle .idle{margin-bottom:26vh}
 .fs{position:fixed;z-index:10;left:3vh;top:3vh;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);color:var(--orange);cursor:inherit;transition:opacity .4s,transform .2s}
 .fs:hover{transform:scale(1.08);border-color:var(--orange)}
@@ -105,20 +99,6 @@ body.still .fs{opacity:0;pointer-events:none}
   <div class="point r"><b class="title wave">เปิดวาร์ป</b><svg viewBox="0 0 120 80"><path class="u" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/><path class="o" d="M10 5C10 50 60 70 110 62M97 56l13 6-11 9"/></svg></div>
   <div class="card"><div id="qr"></div><b id="count"></b></div>
 </aside>
-<svg class="cauldron" viewBox="0 0 120 120">
-  <circle class="bub" cx="44" cy="44" r="5" fill="#7dff6a"/>
-  <circle class="bub" cx="62" cy="40" r="7" fill="#a4ff94"/>
-  <circle class="bub" cx="78" cy="44" r="4" fill="#7dff6a"/>
-  <circle class="bub" cx="54" cy="42" r="3" fill="#c8ffbf"/>
-  <g class="body">
-    <path d="M30 104l-6 12h10l4-8zM90 104l6 12H86l-4-8z" fill="#0b0618"/>
-    <ellipse cx="60" cy="78" rx="48" ry="36" fill="#1a0d33"/>
-    <path d="M26 70q4-18 20-24" stroke="#ffffff22" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="60" cy="48" rx="52" ry="11" fill="#2a1a40"/>
-    <ellipse cx="60" cy="47" rx="45" ry="7" fill="#7dff6a"/>
-    <ellipse cx="50" cy="46" rx="14" ry="2.5" fill="#c8ffbf"/>
-  </g>
-</svg>
 
 <script src="deco.js"></script>
 <script type="module">
