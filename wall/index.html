@@ -59,7 +59,7 @@ body.is-idle .idle{margin-bottom:24vh}
 
 <script src="deco.js"></script>
 <script type="module">
-import { db, requireLogin } from './fb.js';
+import { db } from './fb.js';
 import { ref, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const SHOW_MS = 60_000;
@@ -114,17 +114,20 @@ function done() {
   next();
 }
 
-requireLogin(() => {
-  onValue(ref(db, 'approved'), (snap) => {
-    const list = [];
-    snap.forEach((c) => { list.push({ id: c.key, ...c.val() }); });
-    queue = list;
-    if (cur && !list.some((x) => x.id === cur.id)) { clearTimeout(timer); cur = null; }
-    next();
-  });
-  let first = true;
-  onValue(ref(db, 'skip'), () => { if (first) { first = false; return; } done(); });
+onValue(ref(db, 'approved'), (snap) => {
+  const list = [];
+  snap.forEach((c) => { list.push({ id: c.key, ...c.val() }); });
+  queue = list;
+  if (cur && !list.some((x) => x.id === cur.id)) { clearTimeout(timer); cur = null; }
+  next();
 });
+let first = true;
+onValue(ref(db, 'skip'), () => { if (first) { first = false; return; } done(); });
+
+// Browsers only allow fullscreen after a click or key press.
+const full = () => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {}); };
+addEventListener('click', full);
+addEventListener('keydown', full);
 </script>
 </body>
 </html>
