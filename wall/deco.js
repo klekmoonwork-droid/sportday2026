@@ -1,4 +1,4 @@
-// Night backdrop: stars, moon, castle, fog, bobbing pumpkins/ghosts and passing bats.
+// Night backdrop: stars, moon, castle, fog, bobbing pumpkins/ghosts.
 const PUMPKIN = '<rect x="46" y="2" width="8" height="16" rx="3" fill="#3d7a2a"/><ellipse cx="30" cy="54" rx="24" ry="33" fill="#e8610c"/><ellipse cx="70" cy="54" rx="24" ry="33" fill="#e8610c"/><ellipse cx="50" cy="54" rx="24" ry="35" fill="#ff7f1f"/><path d="M30 42l10 10H22zM70 42l8 10H60zM28 64q22 18 44 0l-6 8-6-6-6 8-6-8-6 8-6-6z" fill="#3a1a05"/>';
 const GHOST = '<path d="M8 48Q8 6 40 6t32 42v38l-8-8-8 8-8-8-8 8-8-8-8 8-8-8-8 8z" fill="#fff" stroke="#2a1640" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="51" cy="40" rx="5" ry="8" fill="#2a1640"/><ellipse cx="40" cy="58" rx="6" ry="5" fill="#2a1640"/>';
 document.body.insertAdjacentHTML('afterbegin', `
@@ -18,14 +18,3 @@ document.querySelectorAll('.wave').forEach((el) => {
   el.innerHTML = [...seg.segment(el.textContent)]
     .map((g, i) => (g.segment === ' ' ? ' ' : `<span style="--i:${i}">${g.segment}</span>`)).join('');
 });
-
-function bat() {
-  const b = document.createElement('div');
-  b.className = 'bat';
-  b.style.setProperty('--y0', `${10 + Math.random() * 40}vh`);
-  b.style.setProperty('--y1', `${Math.random() * 50}vh`);
-  b.innerHTML = '<svg viewBox="0 0 100 50"><path fill="currentColor" d="M50 18C46 10 42 10 40 16 34 8 22 6 10 12c8 4 10 12 8 20 8-6 16-4 20 2 4-6 8-6 12-2 4-4 8-4 12 2 4-6 12-8 20-2-2-8 0-16 8-20-12-6-24-4-30 4-2-6-6-6-10 2z"/></svg>';
-  document.body.append(b);
-  b.addEventListener('animationend', () => b.remove());
-}
-setInterval(bat, 4500);
