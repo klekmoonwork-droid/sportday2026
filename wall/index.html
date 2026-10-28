@@ -41,14 +41,27 @@ html,body{height:100%;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg xmln
 .timer i.run{animation:drain var(--ms) linear forwards}
 @keyframes drain{to{transform:scaleX(0)}}
 
-.qr{position:fixed;z-index:6;right:3vh;bottom:3vh;width:20vh;padding:1.4vh;border-radius:2vh;background:#fff;box-shadow:0 0 0 .5vh var(--orange),0 0 6vh #ff7a1a88;transition:all .8s cubic-bezier(.7,0,.2,1)}
+.qr{--s:20vh;position:fixed;z-index:6;right:4vh;bottom:4vh;width:var(--s);transition:all .8s cubic-bezier(.7,0,.2,1)}
+.qr .card{position:relative;padding:1.4vh;border-radius:2vh;background:#fff;box-shadow:0 0 0 .5vh var(--orange),0 0 6vh #ff7a1a88;animation:nudge 5s ease-in-out infinite}
+@keyframes nudge{0%,86%,100%{rotate:0deg}89%{rotate:-6deg}92%{rotate:5deg}95%{rotate:-3deg}98%{rotate:2deg}}
 .qr #qr img,.qr #qr canvas{display:block;width:100%!important;height:auto!important}
 .qr b{display:block;margin-top:1vh;text-align:center;font:600 2.4vh "Mitr";color:#1a0d33}
-.qr{animation:nudge 5s ease-in-out infinite}
-@keyframes nudge{0%,86%,100%{rotate:0deg}89%{rotate:-6deg}92%{rotate:5deg}95%{rotate:-3deg}98%{rotate:2deg}}
-body.is-idle .qr{width:26vh;right:50%;bottom:4vh;translate:50% 0}
+.warp{position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;translate:-50% -50%;pointer-events:none}
+.warp::before,.warp::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(#a066ff,#ff8a2a,#ffc861,#e0408f,#7dff6a,#a066ff);-webkit-mask:radial-gradient(closest-side,#0000 62%,#000 65%,#000 76%,#0000 80%);mask:radial-gradient(closest-side,#0000 62%,#000 65%,#000 76%,#0000 80%);filter:blur(1.5px);animation:spin 2.4s linear infinite}
+.warp::after{inset:-14%;opacity:.55;animation:spin 4s linear infinite reverse}
+@keyframes spin{to{rotate:360deg}}
+.call{position:absolute;left:50%;bottom:calc(100% + var(--s)*.34);translate:-50% 0;white-space:nowrap;font:600 calc(var(--s)*.19) "Mitr";color:#fff;padding:.15em .9em .3em;border-radius:99px;background:linear-gradient(135deg,#a066ff,#5a2fb0);box-shadow:0 0 0 .08em #ffc861,0 0 1em #a066ff;text-shadow:0 0 .3em #a066ff,0 0 .7em #ff8a2a,0 .08em 0 #1a0d33}
+.call span{display:inline-block;padding-top:.25em;margin-top:-.25em;animation:wave 1.8s ease-in-out infinite;animation-delay:calc(var(--i)*90ms)}
+body.is-idle .qr{--s:26vh;right:50%;bottom:5vh;translate:50% 0}
 body.is-idle .qr b{display:none}
-body.is-idle .idle{margin-bottom:24vh}
+body:not(.is-idle) .call{left:auto;right:0;translate:none}
+.cauldron{position:fixed;z-index:2;right:6vw;bottom:1vh;width:26vh;filter:drop-shadow(0 0 4vh #7dff6a66);transition:opacity .6s,transform .6s}
+.cauldron .body{animation:hop 3s ease-in-out infinite;transform-origin:50% 100%;transform-box:fill-box}
+.cauldron .bub{transform-box:fill-box;transform-origin:center;animation:bub 2.2s ease-in infinite}
+.cauldron .bub:nth-of-type(2){animation-delay:-.7s}.cauldron .bub:nth-of-type(3){animation-delay:-1.4s}.cauldron .bub:nth-of-type(4){animation-delay:-1.9s}
+@keyframes bub{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}100%{transform:translateY(-60px) scale(1.2);opacity:0}}
+body:not(.is-idle) .cauldron{opacity:0;transform:translateY(30%)}
+body.is-idle .idle{margin-bottom:44vh}
 .fs{position:fixed;z-index:10;left:3vh;top:3vh;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);color:var(--orange);cursor:inherit;transition:opacity .4s,transform .2s}
 .fs:hover{transform:scale(1.08);border-color:var(--orange)}
 .fs svg{width:28px;height:28px}
@@ -77,7 +90,25 @@ body.still .fs{opacity:0;pointer-events:none}
   <svg class="in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
   <svg class="out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
 </button>
-<aside class="qr"><div id="qr"></div><b id="count"></b></aside>
+<aside class="qr">
+  <div class="warp"></div>
+  <div class="call wave">เปิดวาปขึ้นจอ</div>
+  <div class="card"><div id="qr"></div><b id="count"></b></div>
+</aside>
+<svg class="cauldron" viewBox="0 0 120 120">
+  <circle class="bub" cx="44" cy="44" r="5" fill="#7dff6a"/>
+  <circle class="bub" cx="62" cy="40" r="7" fill="#a4ff94"/>
+  <circle class="bub" cx="78" cy="44" r="4" fill="#7dff6a"/>
+  <circle class="bub" cx="54" cy="42" r="3" fill="#c8ffbf"/>
+  <g class="body">
+    <path d="M30 104l-6 12h10l4-8zM90 104l6 12H86l-4-8z" fill="#0b0618"/>
+    <ellipse cx="60" cy="78" rx="48" ry="36" fill="#1a0d33"/>
+    <path d="M26 70q4-18 20-24" stroke="#ffffff22" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="48" rx="52" ry="11" fill="#2a1a40"/>
+    <ellipse cx="60" cy="47" rx="45" ry="7" fill="#7dff6a"/>
+    <ellipse cx="50" cy="46" rx="14" ry="2.5" fill="#c8ffbf"/>
+  </g>
+</svg>
 
 <script src="deco.js"></script>
 <script type="module">
