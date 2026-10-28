@@ -1,0 +1,43 @@
+:root{
+  --orange:#ff8a2a; --purple:#a066ff; --gold:#ffc861;
+  --bg:#0f0820; --bg2:#1c0f38; --ink:#f3eaff; --muted:#b9a6d6; --card:#1d1238cc; --line:#f3eaff22;
+  --sky1:#05020d; --sky2:#3a1670;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Sarabun",system-ui,sans-serif}
+h1,h2,h3,b,button,input,textarea{font-family:"Mitr",sans-serif}
+svg{display:block}
+[hidden]{display:none!important}
+
+/* ---------- night backdrop (same as schedule night hero) ---------- */
+.sky{position:fixed;inset:0;background:linear-gradient(180deg,var(--sky1),var(--sky2))}
+.stars{position:fixed;inset:0}
+.stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2;transform:scale(.6)}}
+.moon{position:fixed;right:8%;top:8%;width:min(30vw,260px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe2a6,#ffab3d 55%,#e2741c);box-shadow:0 0 90px 30px #ff8a2a66}
+.moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 62% 38%,#c7651b38 0 9%,#0000 10%),radial-gradient(circle at 36% 64%,#c7651b30 0 7%,#0000 8%),radial-gradient(circle at 70% 70%,#c7651b28 0 5%,#0000 6%)}
+.castle{position:fixed;left:0;right:0;bottom:0;height:34%}
+.castle svg{width:100%;height:100%}
+.fog{position:fixed;left:-10%;right:-10%;bottom:-20px;height:30%;background:radial-gradient(ellipse at 30% 100%,#b28cff55,transparent 60%),radial-gradient(ellipse at 75% 100%,#ff8a2a33,transparent 60%);filter:blur(10px);animation:fog 9s ease-in-out infinite alternate}
+@keyframes fog{to{transform:translateX(6%)}}
+.bat{position:fixed;z-index:40;width:60px;pointer-events:none;color:#1a0d33;filter:drop-shadow(0 0 6px #ff8a2a);animation:fly 9s linear forwards}
+.bat svg{animation:flap .25s ease-in-out infinite alternate}
+@keyframes flap{to{transform:scaleY(.4)}}
+@keyframes fly{from{transform:translate(-80px,var(--y0))}to{transform:translate(110vw,var(--y1))}}
+
+/* ---------- shared bits ---------- */
+.title{font-weight:600;line-height:1;background:linear-gradient(180deg,#ffd27a,#ff7a1a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px #ff7a1a88)}
+.eyebrow{display:inline-block;font:500 14px "Mitr";letter-spacing:.2em;padding:6px 14px;border-radius:99px;background:var(--card);border:1px solid var(--line)}
+.btn{border:0;border-radius:16px;padding:14px 18px;cursor:pointer;font:600 17px "Mitr";color:#fff;background:linear-gradient(135deg,var(--orange),#ff5e00);box-shadow:0 6px 0 #a83d00}
+.btn:active{translate:0 4px;box-shadow:0 2px 0 #a83d00}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:var(--card);border:1px solid var(--line);box-shadow:none}
+.field{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#0b0618cc;color:var(--ink);font:400 17px "Sarabun";outline:none}
+.field:focus{border-color:var(--orange)}
+
+.login{position:fixed;inset:0;z-index:200;display:grid;place-content:center;gap:12px;padding:16px;background:#05020df2}
+.login b{font:600 30px "Mitr";text-align:center;color:var(--orange);margin-bottom:6px}
+.login input{width:min(320px,calc(100vw - 32px));padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#0b0618;color:var(--ink);font:400 17px "Sarabun"}
+.login button{padding:14px;border:0;border-radius:14px;background:var(--orange);color:#fff;font:600 17px "Mitr";cursor:pointer}
+.login small{min-height:1.2em;text-align:center;color:#ff8f9b}

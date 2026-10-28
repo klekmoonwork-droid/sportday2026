@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>100 คืนหลอน · จอ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wall.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+html,body{height:100%;overflow:hidden;cursor:none}
+.stage{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:4vh 4vw}
+
+.idle{text-align:center}
+.idle h1{font-size:13vw}
+.idle .sub{font:500 4vw "Mitr";color:#fff;letter-spacing:.04em;margin-top:1vh;text-shadow:0 0 20px #a066ff}
+.idle .eyebrow{font-size:1.4vw;margin-bottom:2vh}
+
+.post{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:5vw;width:100%;max-width:92vw;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:translateY(8vh) scale(.6) rotate(-6deg);opacity:0}}
+.photo{padding:1.4vh 1.4vh 6vh;background:#fff6ea;border-radius:1.2vh;rotate:-3deg;box-shadow:0 0 0 .6vh var(--orange),0 0 12vh 2vh #ff7a1a66,0 4vh 8vh #0008}
+.photo img{display:block;max-height:68vh;max-width:46vw;border-radius:.6vh}
+.info{min-width:0;padding-right:22vh}
+.ig{display:inline-block;font:600 5vh "Mitr";padding:1vh 3vh 1.4vh;border-radius:99px;background:linear-gradient(135deg,var(--purple),#5a2fb0);color:#fff;box-shadow:0 0 6vh #a066ff88;overflow-wrap:anywhere}
+.quote{margin-top:4vh;font:500 7vh/1.35 "Mitr";color:#fff;text-shadow:0 0 3vh #ff7a1a88;overflow-wrap:anywhere}
+.quote:empty{display:none}
+.timer{margin-top:5vh;height:1.2vh;border-radius:99px;background:var(--line);overflow:hidden}
+.timer i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));transform-origin:left}
+.timer i.run{animation:drain var(--ms) linear forwards}
+@keyframes drain{to{transform:scaleX(0)}}
+
+.qr{position:fixed;z-index:6;right:3vh;bottom:3vh;width:20vh;padding:1.4vh;border-radius:2vh;background:#fff;box-shadow:0 0 0 .5vh var(--orange),0 0 6vh #ff7a1a88;transition:all .8s cubic-bezier(.7,0,.2,1)}
+.qr #qr img,.qr #qr canvas{display:block;width:100%!important;height:auto!important}
+.qr b{display:block;margin-top:1vh;text-align:center;font:600 2.4vh "Mitr";color:#1a0d33}
+body.is-idle .qr{width:26vh;right:50%;bottom:4vh;translate:50% 0}
+body.is-idle .qr b{display:none}
+body.is-idle .idle{margin-bottom:24vh}
+</style>
+</head>
+<body class="is-idle">
+<main class="stage">
+  <div class="idle" id="idle">
+    <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
+    <h1 class="title">100 คืนหลอน</h1>
+    <div class="sub">คน ช.ที.เอ็ม</div>
+  </div>
+  <div class="post" id="post" hidden>
+    <div class="photo"><img id="pimg" alt=""></div>
+    <div class="info">
+      <div class="ig" id="pig"></div>
+      <div class="quote" id="pq"></div>
+      <div class="timer"><i id="bar"></i></div>
+    </div>
+  </div>
+</main>
+<aside class="qr"><div id="qr"></div><b id="count"></b></aside>
+
+<script src="deco.js"></script>
+<script type="module">
+import { db, requireLogin } from './fb.js';
+import { ref, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const SHOW_MS = 60_000;
+const $ = (s) => document.querySelector(s);
+
+new QRCode($('#qr'), {
+  text: new URL('send.html', location.href).href,
+  width: 512, height: 512, colorDark: '#1a0d33', colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.M,
+});
+
+let queue = [];
+let cur = null;
+let timer;
+
+function render() {
+  const waiting = queue.filter((x) => x.id !== cur?.id).length;
+  $('#count').textContent = waiting ? `คิว ${waiting}` : '';
+  document.body.classList.toggle('is-idle', !cur);
+  $('#idle').hidden = !!cur;
+  $('#post').hidden = !cur;
+}
+
+function show(item) {
+  $('#pimg').src = item.img;
+  $('#pig').textContent = item.ig ? `@${item.ig}` : '';
+  $('#pig').hidden = !item.ig;
+  $('#pq').textContent = item.quote || '';
+  const post = $('#post'), bar = $('#bar');
+  post.style.animation = 'none'; bar.classList.remove('run');
+  void post.offsetWidth;
+  post.style.animation = ''; bar.style.setProperty('--ms', `${SHOW_MS}ms`); bar.classList.add('run');
+}
+
+function next() {
+  if (!cur && queue[0]) {
+    cur = queue[0];
+    show(cur);
+    timer = setTimeout(done, SHOW_MS);
+  }
+  render();
+}
+
+// Shown once, then deleted so nothing stays in the database.
+function done() {
+  clearTimeout(timer);
+  if (!cur) return;
+  const id = cur.id;
+  cur = null;
+  queue = queue.filter((x) => x.id !== id);
+  remove(ref(db, `approved/${id}`));
+  next();
+}
+
+requireLogin(() => {
+  onValue(ref(db, 'approved'), (snap) => {
+    const list = [];
+    snap.forEach((c) => { list.push({ id: c.key, ...c.val() }); });
+    queue = list;
+    if (cur && !list.some((x) => x.id === cur.id)) { clearTimeout(timer); cur = null; }
+    next();
+  });
+  let first = true;
+  onValue(ref(db, 'skip'), () => { if (first) { first = false; return; } done(); });
+});
+</script>
+</body>
+</html>
