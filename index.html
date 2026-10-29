@@ -657,7 +657,7 @@ html[data-mode="day"] .glow{display:none}
   <section class="end">
     <div>
       <div class="lbl">เจอกันอีกที</div>
-      <div class="big see">16:30</div>
+      <div class="big see">17:30</div>
       <button class="go" data-to="night"><svg><use href="#i-moon"/></svg>Dark Mode</button>
     </div>
   </section>
@@ -678,7 +678,7 @@ html[data-mode="day"] .glow{display:none}
         <div class="eyebrow">HALLOWEEN NIGHT PARTY</div>
         <h1 class="split night-h">100 คืนหลอน</h1>
         <div class="h1-sub">คน ช.ที.เอ็ม</div>
-        <div class="date">เสาร์ 31 ต.ค. 2569 · 16:30 – 23:00</div>
+        <div class="date">เสาร์ 31 ต.ค. 2569 · 17:30 – 23:00</div>
         <div class="cd" data-cd="night"></div>
       </div>
       <div class="scrollcue" style="border-color:#fff"></div>
@@ -688,7 +688,7 @@ html[data-mode="day"] .glow{display:none}
   <section class="route">
     <svg class="road"><path class="base"/><path class="dash"/><path class="done"/></svg>
     <div class="stop"><div class="box reg">
-      <div class="big-t">16:30</div>
+      <div class="big-t">17:30</div>
       <div class="big-l">เริ่มลงทะเบียน</div>
       <div class="yant-row"><svg class="yant" viewBox="0 0 40 70"><rect x="2" y="2" width="36" height="66" rx="2" fill="#ffd84a" stroke="#c4122a" stroke-width="2"/><path d="M10 12h20M20 12v14M11 22q9 8 18 0M12 34c6-6 10 6 16 0M20 30v26M12 46h16M14 56q6 6 12 0" stroke="#c4122a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg><span>รับยันต์กันผีจุดลงทะเบียน</span></div>
     </div></div>
@@ -740,7 +740,7 @@ html[data-mode="day"] .glow{display:none}
           <img src="assets/photobooth-4.jpg" alt="" style="--k:1">
           <img src="assets/photobooth-5.jpg" alt="" style="--k:2">
         </div>
-        <h3>Photobooth</h3><div class="tags"><span class="tag o">16:30 – 19:30</span></div>
+        <h3>Photobooth</h3><div class="tags"><span class="tag o">17:30 – 19:00</span><span class="tag o">20:00 – 21:30</span></div>
         <p class="ft-txt">ถ่ายไม่อั้น มีให้เลือก 5 แบบ แต่มาช้า ระวังคนเยอะน้าา</p>
         <p class="ft-txt">จิ้มที่ภาพเพื่อดูแบบได้เลย</p>
       </div>
@@ -1018,7 +1018,7 @@ const HALL = [
   { t: 'สเตชั่นแอลกอฮอล์', s: 'เอาขวดเปล่ามาแลก', g: 'liquor', box: [-170, 300, 700, 330], a: stationTop('liquor') },
   { t: 'เบียร์สดสิงห์', s: 'เอาเหยือกเปล่ามาเติม', g: 'beer', box: [-170, 600, 700, 330], a: stationTop('beer') },
   { t: 'น้ำแข็ง', g: 'ice', box: [-170, 1000, 700, 330], a: stationTop('ice') },
-  { t: 'Photobooth', s: '16:30 – 19:30', g: 'booth', box: [580, 770, 700, 330], a: stationTop('booth') },
+  { t: 'Photobooth', s: '17:30 – 19:00\n20:00 – 21:30', g: 'booth', box: [580, 770, 700, 330], a: stationTop('booth') },
   { t: 'Backdrop', g: 'backdrop', box: [580, 1020, 700, 330], a: stationTop('backdrop') },
   { t: 'ผังห้องจัดเลี้ยง', box: HALL_FULL },
 ];
@@ -1153,7 +1153,7 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 $$('.tl-item,.prize,.ft-card,.hotel-map,.newbies').forEach(el => io.observe(el));
 
 /* ---------- live status + countdown ---------- */
-const RANGE = { day: ['11:00', '14:30'], night: ['16:30', '23:00'] };
+const RANGE = { day: ['11:00', '14:30'], night: ['17:30', '23:00'] };
 function tick() {
   const now = Date.now();
   $$('.tl-item').forEach(li => {
